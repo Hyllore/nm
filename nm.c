@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2017/06/08 15:09:53 by droly            ###   ########.fr       */
+/*   Updated: 2017/06/09 17:06:22 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void						print_output(int nsyms, int symoff, int stroff, char *ptr)
 {
 	int						i;
 	char					*stringtable;
-	struct nlist_64 *array;
+	struct nlist_64			*array;
 
 	array = (void *) ptr + symoff;
 	stringtable = (void *) ptr + stroff;
@@ -42,7 +42,6 @@ void						handle_64(char *ptr)
 	lc = (void *) ptr + sizeof(*header);
 	while (i < ncmds)
 	{
-		i++;
 		if (lc->cmd == LC_SYMTAB)
 		{
 			sym = (struct symtab_command *) lc;
@@ -50,6 +49,7 @@ void						handle_64(char *ptr)
 			break ;
 		}
 		lc = (void *) lc + lc->cmdsize;
+		i++;
 	}
 }
 
