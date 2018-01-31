@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/01/30 17:14:38 by droly            ###   ########.fr       */
+/*   Updated: 2018/01/31 17:11:15 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ char secto(struct section_64 *sec, unsigned int n_sect, char **secname)
 	return ('S');
 }
 
-void						print_output(int nsyms, int symoff, int stroff, char *ptr, struct load_command *lc, char **secname)
+void						print_output(struct symtab_command *sym, \
+		char *ptr, struct load_command *lc, char **secname)
 {
 	int						i;
 	char					*stringtable;
@@ -44,16 +45,15 @@ void						print_output(int nsyms, int symoff, int stroff, char *ptr, struct load
 	struct segment_command_64 *seg;
 	struct s_nm					*nm;
 	struct s_nm					*tmp;
-	//	char					* cmd;
 
 	seg = (struct segment_command_64*)lc;
 	sec = (struct section_64*)(seg + sizeof(seg) / sizeof(void*));
-	array = (void *) ptr + symoff;
-	stringtable = (void *) ptr + stroff;
+	array = (void *) ptr + sym->symoff;
+	stringtable = (void *) ptr + sym->stroff;
 	i = 0;
 	nm = (t_nm*)malloc(sizeof(t_nm));
 	tmp = nm;
-	while (i < nsyms)
+	while (i < sym->nsyms)
 	{
 		ret = '?';
 		if ((array[i].n_type & N_TYPE) == N_UNDF)
@@ -80,40 +80,33 @@ void						print_output(int nsyms, int symoff, int stroff, char *ptr, struct load
 		nm->value = array[i].n_value;
 		nm->next = (t_nm*)malloc(sizeof(t_nm));
 		if (ret != 'u' && ret != 'U')
-			ft_printf("%016x %c %s\n", nm->value, nm->type, nm->name);
+			ft_printf("00000001%08x %c %s\n", nm->value, nm->type, nm->name);
 		else
 			ft_printf("                 %c %s\n", nm->type, nm->name);
 		nm = nm->next;
 		nm->next = NULL;
 		i++;
 	}
+	nm = tmp;
 }
 
-void						handle_64(char *ptr)
+void							handle_64(char *ptr, struct mach_header_64 \
+		*header, struct load_command *lc, struct segment_command_64 *seg)
 {
-	int						nsects;
-	int						ncmds;
-	int						i;
-	struct mach_header_64	*header;
-	struct load_command		*lc;
-	struct symtab_command	*sym;
-	struct section_64		*sec;
-	struct segment_command_64 *seg;
-	char					**secname;
-	int i2;
-	int i3;
+	int							nsects;
+	int							ncmds;
+	int							i[3];
+	struct symtab_command		*sym;
+	struct section_64			*sec;
+	char						**secname;
 
-	i2 = 0;
-	i = 0;
-	i3 = 0;
-	header = (struct mach_header_64 *) ptr;
-	lc = (void *) ptr + sizeof(*header);
-	seg = (struct segment_command_64*)lc;
-//	sec = (struct section_64*)(seg + sizeof(seg) / sizeof(void*));
+	i[0] = 0;
+	i[1] = 0;
+	i[2] = 0;
 	ncmds = header->ncmds;
 	nsects = seg->nsects;
-	i3 = nsects;
-	while (i < ncmds)
+	i[2] = nsects;
+	while (i[0] < ncmds)
 	{
 		if (lc->cmd == LC_SEGMENT_64)
 		{
@@ -121,90 +114,99 @@ void						handle_64(char *ptr)
 			nsects += seg->nsects;
 		}
 		lc = (void *) lc + lc->cmdsize;
-		i++;
+		i[0]++;
 	}
-	i = 0;
-	i3 = 0;
+	i[0] = 0;
+	i[2] = 0;
 	lc = (void *) ptr + sizeof(*header);
 	secname = (char **)malloc(sizeof(char*)*nsects);
 	seg = (struct segment_command_64*)lc;
-	while (i < ncmds)
+	while (i[0] < ncmds)
 	{
 		if (lc->cmd == LC_SEGMENT_64)
 		{
-//			ft_printf("%d", seg->nsects);
 			seg = (struct segment_command_64*)lc;
 			sec = (struct section_64*)(seg + sizeof(seg) / sizeof(void*));
-			while (i3 < seg->nsects)
+			while (i[2] < seg->nsects)
 			{
-				secname[i2] = sec->sectname;
-//				ft_printf("segname : %s ", seg->segname);
-//				ft_printf("struct : %s char* : %s\n", sec->sectname, secname[i2]);
+				secname[i[1]] = sec->sectname;
 				sec = (struct section_64 *)(((void*)sec) + sizeof(struct section_64));
-				i2++;
-				i3++;
+				i[1]++;
+				i[2]++;
 			}
-			i3 = 0;
-//			i2 = 0;
-//			secname[i2] = sec->sectname;
-//			i2++;
+			i[2] = 0;
 		}
 		if (lc->cmd == LC_SYMTAB)
 		{
 			sym = (struct symtab_command *) lc;
-			//			ft_printf("%d\n",  ft_itoa_base(lc->cmd, 16));
-			print_output(sym->nsyms, sym->symoff, sym->stroff, ptr, lc, secname);
+			print_output(sym, ptr, lc, secname);
 			break ;
 		}
 		lc = (void *) lc + lc->cmdsize;
-		i++;
+		i[0]++;
 	}
 }
 
-void						nm(char *ptr)
+void							nm(char *ptr)
 {
-	int						magic_number;
+	int							magic_number;
+	struct mach_header_64		*header;
+	struct load_command			*lc;
+	struct segment_command_64	*seg;
 
+	header = (struct mach_header_64 *) ptr;
+	lc = (void *) ptr + sizeof(*header);
+	seg = (struct segment_command_64*)lc;
 	magic_number = *(int *) ptr;
 	if ((unsigned int)magic_number == MH_MAGIC_64)
-		handle_64(ptr);
+		handle_64(ptr, header, lc, seg);
 }
 
-int							main(int ac, char **av)
+int								check_error(int ac, char **av, int fd,
+		struct stat buf)
 {
-	int						fd;
-	char					*ptr;
-	struct stat				buf;
-
 	if (ac != 2)
 	{
 		if ((fd = open("a.out", O_RDONLY)) < 0)
 		{
-			ft_putstr_fd("Error please give one argument or put an \"a.out\" in the repository", 2);
-			return (EXIT_FAILURE);
+			ft_putstr_fd( \
+	"Error please give one argument or put an \"a.out\" in the repository", 2);
+			return (-1);
 		}
 	}
 	else if ((fd = open(av[1], O_RDONLY)) < 0)
 	{
 		ft_putstr_fd("Error open", 2);
-		return (EXIT_FAILURE);
+		return (-1);
 	}
 	if (fstat(fd, &buf) < 0)
 	{
 		ft_putstr_fd("Error fstat", 2);
-		return (EXIT_FAILURE);
+		return (-1);
 	}
-	if ((ptr = mmap (0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
+	return (fd);
+}
+
+int								main(int ac, char **av)
+{
+	int							fd;
+	char						*ptr;
+	struct stat					buf;
+
+	if ((fd = check_error(ac, av, fd, buf)) == -1)
+		return(0);
+	if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == \
+			MAP_FAILED)
 	{
 		ft_putstr_fd("Error mmap", 2);
-		return (EXIT_FAILURE);
+		return (0);
 	}
 	nm(ptr);
 	if (munmap(ptr, buf.st_size) < 0)
 	{
 		ft_putstr_fd("Error munmap", 2);
-		return (EXIT_FAILURE);
+		return (0);
 	}
-	return (EXIT_SUCCESS);
+	return (1);
 }
 
