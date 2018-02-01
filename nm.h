@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/01/30 16:55:52 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/01 16:13:12 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,27 @@
 # include "libft/libft.h"
 
 
-typedef struct		s_segment
+typedef struct				s_stru
 {
-	char			*segname;
-	char			*sectname;
-}					t_segment;
+	struct symtab_command	*sym;
+	struct section_64		*sec;
+	int						i[3];
+	struct load_command		*lc;
+	char					**secname;
+	struct s_nm				*nm;
+	struct s_nm				*tmp;
+	off_t						sizefile;
+	char					*stringtable;
+	struct mach_header_64		*header;
+	struct segment_command_64	*seg;
+}							t_stru;
 
-typedef struct		s_nm
+typedef struct				s_nm
 {
-	char			*name;
-	char			type;
-	uint32_t		value;
-	struct s_nm		*next;
-}					t_nm;
+	char					*name;
+	char					type;
+	uint32_t				value;
+	struct s_nm				*next;
+}							t_nm;
 
 #endif
