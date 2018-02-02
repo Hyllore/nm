@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/02/01 17:08:54 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/02 16:26:12 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,22 @@ char secto(struct section_64 *sec, unsigned int n_sect, char **secname)
 	return ('S');
 }
 
-char						print_output2(char ret, struct nlist_64 *array, int i, struct s_stru *stru)
+int								checkcorrupt(char *tmp, void *ptr, struct s_stru *stru)
 {
+	ft_printf("yo");
+	if ( ptr >= (void*)tmp)
+	{
+		ft_printf("wesh");
+		stru->check = 1;
+		return (0);
+	}
+	return (1);
+}
+
+char						print_output2(char *ptr, struct nlist_64 *array, int i, struct s_stru *stru)
+{
+	char						ret;
+
 	ret = '?';
 	if ((array[i].n_type & N_TYPE) == N_UNDF)
 	{
@@ -54,9 +68,14 @@ char						print_output2(char ret, struct nlist_64 *array, int i, struct s_stru *
 	stru->nm->name = stru->stringtable + array[i].n_un.n_strx;
 	stru->nm->type = ret;
 	stru->nm->value = array[i].n_value;
+	if (checkcorrupt(ptr + stru->sizefile, stru->nm->name, stru) == 0)
+		return (0);
 	stru->nm->next = (t_nm*)malloc(sizeof(t_nm));
 	return (ret);
 }
+
+//verifier pour le fichier test_wrong_lc_command_size pas de message d'ereor
+//
 
 void						print_output(struct s_stru *stru, \
 		char *ptr)
@@ -73,9 +92,14 @@ void						print_output(struct s_stru *stru, \
 	i = -1;
 	stru->nm = (t_nm*)malloc(sizeof(t_nm));
 	stru->tmp = stru->nm;
+	if (checkcorrupt(ptr + stru->sizefile, stru->sec, stru) == 0 || checkcorrupt(ptr + stru->sizefile, array, stru) == 0 || checkcorrupt(ptr + stru->sizefile, stru->stringtable, stru) == 0)
+		return ;
 	while (++i < stru->sym->nsyms)
 	{
-		ret = print_output2(ret, array, i, stru);
+		ft_printf("nik1");
+		ret = print_output2(ptr, array, i, stru);
+		if (stru->check == 1)
+			return;
 		if (ret != 'u' && ret != 'U')
 			ft_printf("00000001%08x %c %s\n", stru->nm->value, stru->nm->type,
 					stru->nm->name);
@@ -94,10 +118,14 @@ int								handle_64s(struct s_stru *stru, struct segment_command_64 *seg, char 
 	{
 		seg = (struct segment_command_64*)stru->lc;
 		stru->sec = (struct section_64*)(seg + sizeof(seg) / sizeof(void*));
+		if (checkcorrupt(ptr + stru->sizefile, stru->sec, stru) == 0)
+			return (0);
 		while (stru->i[2] < seg->nsects)
 		{
 			stru->secname[stru->i[1]] = stru->sec->sectname;
 			stru->sec = (struct section_64 *)(((void*)stru->sec) + sizeof(struct section_64));
+			if (checkcorrupt(ptr + stru->sizefile, stru->sec, stru) == 0)
+				return (0);
 			stru->i[1]++;
 			stru->i[2]++;
 		}
@@ -110,6 +138,8 @@ int								handle_64s(struct s_stru *stru, struct segment_command_64 *seg, char 
 		return (0);
 	}
 	stru->lc = (void *) stru->lc + stru->lc->cmdsize;
+	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
+		return (0);
 	stru->i[0]++;
 	return (1);
 }
@@ -122,9 +152,8 @@ int						handle_64s2(struct s_stru *stru, struct segment_command_64 *seg, int ns
 		nsects += seg->nsects;
 	}
 	stru->lc = (void *)stru->lc + stru->lc->cmdsize;
-//	ptr += stru->sizefile;
-//	if ( (void*)stru->lc > (void*)ptr)
-//		ft_printf("heho");
+	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
+		return (nsects);
 	stru->i[0]++;
 	return (nsects);
 }
@@ -142,32 +171,46 @@ void							handle_64(char *ptr, struct s_stru *stru)
 	nsects = stru->seg->nsects;
 	stru->i[2] = nsects;
 	while (stru->i[0] < stru->header->ncmds)
+	{
 		nsects = handle_64s2(stru, stru->seg, nsects, ptr);
+		if (stru->check == 1)
+			return;
+	}
 	stru->i[0] = 0;
 	stru->i[2] = 0;
 	stru->lc = (void *)ptr + sizeof(*stru->header);
+	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
+		return ;
 	stru->secname = (char **)malloc(sizeof(char*)*nsects);
 	stru->seg = (struct segment_command_64*)stru->lc;
 	while (stru->i[0] < stru->header->ncmds)
 	{
 		if (handle_64s(stru, stru->seg, ptr) == 0)
 			break ;
+		if (stru->check == 1)
+			return;
 	}
 }
 
-void							nm(char *ptr, off_t sizefile)
+int								nm(char *ptr, off_t sizefile)
 {
 	int							magic_number;
 	struct s_stru				*stru;
 
 	stru = (t_stru*)malloc(sizeof(t_stru));
+	stru->check = 0;
 	stru->header = (struct mach_header_64 *)ptr;
 	stru->lc = (void *) ptr + sizeof(*stru->header);
 	stru->seg = (struct segment_command_64*)stru->lc;
 	stru->sizefile = sizefile;
 	magic_number = *(int *)ptr;
+	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
+		return (0);
 	if ((unsigned int)magic_number == MH_MAGIC_64)
 		handle_64(ptr, stru);
+	if (stru->check == 1)
+		return (0);
+	return (1);
 }
 
 int								check_error(int ac, char **av, int fd)
@@ -177,13 +220,13 @@ int								check_error(int ac, char **av, int fd)
 		if ((fd = open("a.out", O_RDONLY)) < 0)
 		{
 			ft_putstr_fd( \
-	"Error please give one argument or put an \"a.out\" in the repository", 2);
+	"Error please give one argument or put an \"a.out\" in the repository\n", 2);
 			return (-1);
 		}
 	}
 	else if ((fd = open(av[1], O_RDONLY)) < 0)
 	{
-		ft_putstr_fd("Error open", 2);
+		ft_putstr_fd("Error open\n", 2);
 		return (-1);
 	}
 	return (fd);
@@ -199,19 +242,23 @@ int								main(int ac, char **av)
 		return(0);
 	if (fstat(fd, &buf) < 0)
 	{
-		ft_putstr_fd("Error fstat", 2);
+		ft_putstr_fd("Error fstat\n", 2);
 		return (-1);
 	}
 	if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == \
 			MAP_FAILED)
 	{
-		ft_putstr_fd("Error mmap", 2);
+		ft_putstr_fd("Error mmap\n", 2);
 		return (0);
 	}
-	nm(ptr, buf.st_size);
+	if (nm(ptr, buf.st_size) == 0)
+	{
+		ft_putstr_fd("Error file corrupted\n", 2);
+		return (0);
+	}
 	if (munmap(ptr, buf.st_size) < 0)
 	{
-		ft_putstr_fd("Error munmap", 2);
+		ft_putstr_fd("Error munmap\n", 2);
 		return (0);
 	}
 	return (1);

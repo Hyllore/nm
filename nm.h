@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/02/01 16:13:12 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/02 11:24:17 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct				s_stru
 	char					*stringtable;
 	struct mach_header_64		*header;
 	struct segment_command_64	*seg;
+	int							check;
 }							t_stru;
 
 typedef struct				s_nm
