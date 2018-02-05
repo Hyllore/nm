@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/02/02 16:26:12 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/05 17:11:43 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,34 @@ char secto(struct section_64 *sec, unsigned int n_sect, char **secname)
 
 int								checkcorrupt(char *tmp, void *ptr, struct s_stru *stru)
 {
-	ft_printf("yo");
+//	ft_printf("yo");
 	if ( ptr >= (void*)tmp)
 	{
-		ft_printf("wesh");
+//		ft_printf("wesh");
 		stru->check = 1;
 		return (0);
 	}
 	return (1);
+}
+
+static int compare(void const *a, void const *b)
+{
+	t_nm const *pa = a;
+	t_nm const *pb = b;
+
+	int ret;
+
+	ret = strcmp(pa->name, pb->name);
+	if (ret == 0)
+	{
+		if (pa->value > pb->value)
+			return (1);
+		if (pa->value == pb->value)
+			return (0);
+		if (pa->value < pb->value)
+			return (-1);
+	}
+	return (ret);
 }
 
 char						print_output2(char *ptr, struct nlist_64 *array, int i, struct s_stru *stru)
@@ -65,17 +85,16 @@ char						print_output2(char *ptr, struct nlist_64 *array, int i, struct s_stru 
 		ret = 'Z';
 	if ((array[i].n_type & N_EXT) == 0 && ret != '?')
 		ret += 32;
-	stru->nm->name = stru->stringtable + array[i].n_un.n_strx;
-	stru->nm->type = ret;
-	stru->nm->value = array[i].n_value;
-	if (checkcorrupt(ptr + stru->sizefile, stru->nm->name, stru) == 0)
+//	ft_printf("way");
+	stru->nm[i].name = stru->stringtable + array[i].n_un.n_strx;
+	stru->nm[i].type = ret;
+	stru->nm[i].value = array[i].n_value;
+	if (checkcorrupt(ptr + stru->sizefile, stru->nm[i].name, stru) == 0)
 		return (0);
-	stru->nm->next = (t_nm*)malloc(sizeof(t_nm));
 	return (ret);
 }
 
 //verifier pour le fichier test_wrong_lc_command_size pas de message d'ereor
-//
 
 void						print_output(struct s_stru *stru, \
 		char *ptr)
@@ -90,32 +109,34 @@ void						print_output(struct s_stru *stru, \
 	array = (void *) ptr + stru->sym->symoff;
 	stru->stringtable = (void *) ptr + stru->sym->stroff;
 	i = -1;
-	stru->nm = (t_nm*)malloc(sizeof(t_nm));
-	stru->tmp = stru->nm;
+	stru->nm = (t_nm*)malloc(sizeof(t_nm) * stru->sym->nsyms);
 	if (checkcorrupt(ptr + stru->sizefile, stru->sec, stru) == 0 || checkcorrupt(ptr + stru->sizefile, array, stru) == 0 || checkcorrupt(ptr + stru->sizefile, stru->stringtable, stru) == 0)
 		return ;
 	while (++i < stru->sym->nsyms)
 	{
-		ft_printf("nik1");
+//		ft_printf("nik1");
 		ret = print_output2(ptr, array, i, stru);
 		if (stru->check == 1)
 			return;
-		if (ret != 'u' && ret != 'U')
-			ft_printf("00000001%08x %c %s\n", stru->nm->value, stru->nm->type,
-					stru->nm->name);
-		else
-			ft_printf("                 %c %s\n", stru->nm->type,
-					stru->nm->name);
-		stru->nm = stru->nm->next;
-		stru->nm->next = NULL;
 	}
-	stru->nm = stru->tmp;
+//	qsort(stru->nm, stru->sym->nsyms, sizeof(t_nm), compare);
+	i = 0;
+	while (++i < stru->sym->nsyms)
+	{
+		if (stru->nm[i].type != 'u' && stru->nm[i].type != 'U')
+			ft_printf("00000001%08x %c %s\n", stru->nm[i].value, stru->nm[i].type,
+					stru->nm[i].name);
+		else
+			ft_printf("                 %c %s\n", stru->nm[i].type,
+					stru->nm[i].name);
+	}
 }
 
 int								handle_64s(struct s_stru *stru, struct segment_command_64 *seg, char *ptr)
 {
 	if (stru->lc->cmd == LC_SEGMENT_64)
 	{
+//		ft_printf("%d", __LINE__);
 		seg = (struct segment_command_64*)stru->lc;
 		stru->sec = (struct section_64*)(seg + sizeof(seg) / sizeof(void*));
 		if (checkcorrupt(ptr + stru->sizefile, stru->sec, stru) == 0)
@@ -133,6 +154,8 @@ int								handle_64s(struct s_stru *stru, struct segment_command_64 *seg, char 
 	}
 	if (stru->lc->cmd == LC_SYMTAB)
 	{
+		stru->check2 = 0;
+//		ft_printf("lol");
 		stru->sym = (struct symtab_command *)stru->lc;
 		print_output(stru, ptr);
 		return (0);
@@ -168,6 +191,7 @@ void							handle_64(char *ptr, struct s_stru *stru)
 	stru->i[0] = 0;
 	stru->i[1] = 0;
 	stru->i[2] = 0;
+	stru->check2 = 1;
 	nsects = stru->seg->nsects;
 	stru->i[2] = nsects;
 	while (stru->i[0] < stru->header->ncmds)
@@ -190,6 +214,8 @@ void							handle_64(char *ptr, struct s_stru *stru)
 		if (stru->check == 1)
 			return;
 	}
+	if (stru->check2 == 1)
+		stru->check = 1;
 }
 
 int								nm(char *ptr, off_t sizefile)
@@ -220,7 +246,7 @@ int								check_error(int ac, char **av, int fd)
 		if ((fd = open("a.out", O_RDONLY)) < 0)
 		{
 			ft_putstr_fd( \
-	"Error please give one argument or put an \"a.out\" in the repository\n", 2);
+"Error please give one argument or put an \"a.out\" in the repository\n", 2);
 			return (-1);
 		}
 	}
