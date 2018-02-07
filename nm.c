@@ -16,7 +16,13 @@
 
 //recuper array[i].n_value, .
 
-char secto(struct section_64 *sec, unsigned int n_sect, char **secname)
+
+/*void							ft_qsort(void *base, size_t nmemb, size_t size, int(*compar)(const void *, const void *))
+{
+	
+}*/
+
+char							secto(struct section_64 *sec, unsigned int n_sect, char **secname)
 {
 	if (!ft_strcmp(secname[n_sect - 1], SECT_DATA))
 		return ('D');
@@ -41,6 +47,8 @@ int								checkcorrupt(char *tmp, void *ptr, struct s_stru *stru)
 	return (1);
 }
 
+//comportement bizqre lors de la comparaison
+
 static int compare(void const *a, void const *b)
 {
 	t_nm const *pa = a;
@@ -49,15 +57,28 @@ static int compare(void const *a, void const *b)
 	int ret;
 
 	ret = strcmp(pa->name, pb->name);
-	if (ret == 0)
+//	ft_printf("%s\n", pa->name);
+//	ft_printf("%s\n", pb->name);
+/*	if (ret == 0)
 	{
+//		ft_printf("wow2\n");
 		if (pa->value > pb->value)
-			return (1);
-		if (pa->value == pb->value)
-			return (0);
-		if (pa->value < pb->value)
+		{
+//			ft_printf("wow3\n");
 			return (-1);
-	}
+		}
+		if (pa->value == pb->value)
+		{
+//			ft_printf("wow4\n");
+			return (0);
+		}
+		if (pa->value < pb->value)
+		{
+//			ft_printf("wow5\n");
+			return (1);
+		}
+	}*/
+//	ft_printf("wow\n");
 	return (ret);
 }
 
@@ -85,7 +106,7 @@ char						print_output2(char *ptr, struct nlist_64 *array, int i, struct s_stru 
 		ret = 'Z';
 	if ((array[i].n_type & N_EXT) == 0 && ret != '?')
 		ret += 32;
-//	ft_printf("way");
+//	ft_printf("str : %s\n", stru->stringtable + array[i].n_un.n_strx);
 	stru->nm[i].name = stru->stringtable + array[i].n_un.n_strx;
 	stru->nm[i].type = ret;
 	stru->nm[i].value = array[i].n_value;
@@ -119,8 +140,8 @@ void						print_output(struct s_stru *stru, \
 		if (stru->check == 1)
 			return;
 	}
-//	qsort(stru->nm, stru->sym->nsyms, sizeof(t_nm), compare);
-	i = 0;
+	qsort(stru->nm, stru->sym->nsyms, sizeof(t_nm), compare);
+	i = -1;
 	while (++i < stru->sym->nsyms)
 	{
 		if (stru->nm[i].type != 'u' && stru->nm[i].type != 'U')

@@ -21,6 +21,7 @@
 # include <wchar.h>
 # include <stdlib.h>
 # include <stdarg.h>
+# include <inttypes.h>
 
 typedef struct		s_list
 {
