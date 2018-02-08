@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/02/05 17:11:43 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/08 17:08:44 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,97 @@
 //recuper array[i].n_value, .
 
 
-/*void							ft_qsort(void *base, size_t nmemb, size_t size, int(*compar)(const void *, const void *))
+void							ft_qsort(void *base, size_t nmemb, size_t size, int(*compar)(const void *, const void *))
 {
-	
-}*/
+	void *pivot;
+	void *deplacor;
+	void *tab1;
+	void *tab2;
+	char *tmp;
+	char *tmp2;
+	char *tmp3;
+	int i;
+	int i2;
+	int i3;
+
+	i3 = 0;
+	pivot = base + (size * (nmemb / 2));
+	deplacor = base;
+	i = 0;
+	i2 = 0;
+	if (pivot == base)
+		return;
+	while (i < nmemb)
+	{
+		ft_printf("yo %d, %d", i, nmemb);
+		if (compar(deplacor, pivot) < 0 || compar(deplacor, pivot) == 0)
+		{
+			ft_printf("tour1");
+			i2++;
+		}
+		ft_printf("tour2");
+		deplacor = deplacor + (size);
+		ft_printf("tour3");
+		i++;
+		ft_printf("tour4");
+	}
+	i2--;
+	ft_printf("\n%d\n", i2);
+	tab1 = malloc(size * i2);
+	tab2 = malloc(size * (nmemb - i2));
+	i = 0;
+	deplacor = base;
+	while (i < nmemb)
+	{
+		ft_printf("kali");
+		if (compar(deplacor, pivot) <= 0)
+		{
+			tab1 = deplacor;
+			tab1 = tab1 + (size * i);
+		}
+		else
+		{
+			tab2 = deplacor;
+			tab2 = tab2 + (size * i);
+		}
+		deplacor = deplacor + (size);
+		i++;
+	}
+	ft_printf("kali2");
+	i = 0;
+	tmp = (char*)tab1;
+	tmp2 = (char*)tab2;
+	tmp3 = (char*)base;
+	deplacor = base;
+	while (i < (i2 * size))
+	{
+		ft_printf("kali3");
+		tmp3[i] = tmp[i];
+		i++;
+	}
+	tmp = (char*)pivot;
+	while (i < size)
+	{
+		ft_printf("kali4");
+		tmp3[i] = tmp[i3];
+		i3++;
+		i++;
+	}
+	i3 = 0;
+	while(i < (nmemb * size))
+	{
+		ft_printf("kali5");
+		tmp3[i] = tmp2[i3];
+		i++;
+		i3++;
+	}
+//	tab1 = tab1 - (size * i2);
+//	tab2 = tab2 - (size * (nmemb - i2));
+	pivot = base;
+	deplacor = base + ((i2 * size) + size);
+	ft_qsort(pivot, i2, size, compar);
+	ft_qsort(deplacor, nmemb - i2, size, compar);
+}
 
 char							secto(struct section_64 *sec, unsigned int n_sect, char **secname)
 {
@@ -30,8 +117,6 @@ char							secto(struct section_64 *sec, unsigned int n_sect, char **secname)
 		return ('B');
 	else if (!ft_strcmp(secname[n_sect - 1], SECT_TEXT))
 		return ('T');
-	else
-		return ('S');
 	return ('S');
 }
 
@@ -59,13 +144,13 @@ static int compare(void const *a, void const *b)
 	ret = strcmp(pa->name, pb->name);
 //	ft_printf("%s\n", pa->name);
 //	ft_printf("%s\n", pb->name);
-/*	if (ret == 0)
+	if (ret == 0)
 	{
 //		ft_printf("wow2\n");
 		if (pa->value > pb->value)
 		{
 //			ft_printf("wow3\n");
-			return (-1);
+			return (1);
 		}
 		if (pa->value == pb->value)
 		{
@@ -75,9 +160,9 @@ static int compare(void const *a, void const *b)
 		if (pa->value < pb->value)
 		{
 //			ft_printf("wow5\n");
-			return (1);
+			return (-1);
 		}
-	}*/
+	}
 //	ft_printf("wow\n");
 	return (ret);
 }
@@ -140,14 +225,14 @@ void						print_output(struct s_stru *stru, \
 		if (stru->check == 1)
 			return;
 	}
-	qsort(stru->nm, stru->sym->nsyms, sizeof(t_nm), compare);
+	ft_qsort(stru->nm, stru->sym->nsyms, sizeof(t_nm), compare);
 	i = -1;
 	while (++i < stru->sym->nsyms)
 	{
-		if (stru->nm[i].type != 'u' && stru->nm[i].type != 'U')
+		if (stru->nm[i].type != 'u' && stru->nm[i].type != 'U' && stru->nm[i].type != 'z' && stru->nm[i].type != 'Z')
 			ft_printf("00000001%08x %c %s\n", stru->nm[i].value, stru->nm[i].type,
 					stru->nm[i].name);
-		else
+		else if (stru->nm[i].type != 'z' && stru->nm[i].type != 'Z')
 			ft_printf("                 %c %s\n", stru->nm[i].type,
 					stru->nm[i].name);
 	}
