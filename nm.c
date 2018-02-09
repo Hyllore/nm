@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/02/08 17:08:44 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/09 17:28:21 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 //recuper array[i].n_value, .
 
 
-void							ft_qsort(void *base, size_t nmemb, size_t size, int(*compar)(const void *, const void *))
+/*void							ft_qsort(void *base, size_t nmemb, size_t size, int(*compar)(const void *, const void *))
 {
 	void *pivot;
 	void *deplacor;
@@ -29,66 +29,105 @@ void							ft_qsort(void *base, size_t nmemb, size_t size, int(*compar)(const vo
 	int i;
 	int i2;
 	int i3;
+	t_nm *t;
+
 
 	i3 = 0;
-	pivot = base + (size * (nmemb / 2));
 	deplacor = base;
+	pivot = base + (size * (nmemb / 2));
 	i = 0;
 	i2 = 0;
 	if (pivot == base)
 		return;
+	t = pivot;
+	ft_printf("pivot: %s\n", t->name);
+	ft_printf("\n_____________________________\n");
+//	ft_printf("%s", t->name);
+//	ft_printf("adresse : %p, nmemb: %d, size: %d, deplacor : %p, pivot : %p\n", base, nmemb, size, deplacor, pivot);
 	while (i < nmemb)
 	{
-		ft_printf("yo %d, %d", i, nmemb);
-		if (compar(deplacor, pivot) < 0 || compar(deplacor, pivot) == 0)
+//		ft_printf("yo %d, %d", i, nmemb);
+		if (compar(deplacor, pivot) <= 0)
 		{
-			ft_printf("tour1");
+//			ft_printf("tour1");
 			i2++;
 		}
-		ft_printf("tour2");
+//		ft_printf("tour2");
 		deplacor = deplacor + (size);
-		ft_printf("tour3");
+//		ft_printf("tour3");
 		i++;
-		ft_printf("tour4");
+//		ft_printf("tour4");
 	}
 	i2--;
-	ft_printf("\n%d\n", i2);
+//	ft_printf("\n%d\n", i2);
 	tab1 = malloc(size * i2);
 	tab2 = malloc(size * (nmemb - i2));
 	i = 0;
 	deplacor = base;
 	while (i < nmemb)
 	{
-		ft_printf("kali");
+		t = deplacor;
+		ft_printf("%s\n", t->name);
+//		ft_printf("kali");
 		if (compar(deplacor, pivot) <= 0)
 		{
+			ft_printf("hello\n");
 			tab1 = deplacor;
-			tab1 = tab1 + (size * i);
+			tab1 = tab1 + size;
 		}
 		else
 		{
+			ft_printf("hello2\n");
 			tab2 = deplacor;
-			tab2 = tab2 + (size * i);
+			tab2 = tab2 + size;
 		}
 		deplacor = deplacor + (size);
 		i++;
 	}
-	ft_printf("kali2");
 	i = 0;
+	deplacor = tab1;
+	ft_printf("\n______________tab1_____________\n");
+	while (i < i2)
+	{
+		t = deplacor;
+		ft_printf("%s\n", t->name);
+		deplacor = deplacor + (size);
+		i++;
+	}
+	ft_printf("\n___________fintab1____________\n");
+	ft_printf("\n___________tab2____________\n");
+	i = 0;
+	deplacor = tab2;
+	while (i < nmemb)
+	{
+		t = deplacor;
+		ft_printf("%s\n", t->name);
+		deplacor = deplacor + (size);
+		i++;
+	}
+	ft_printf("\n___________fintab2____________\n");
+
+//	ft_printf("%d", i);
+//	ft_printf("kali2");
+	i = 0;
+	tab1 = tab1 - ((i2 + 1) * size);
+	tab2 = tab2 - ((nmemb - (i2 + 1)) * size);
 	tmp = (char*)tab1;
 	tmp2 = (char*)tab2;
 	tmp3 = (char*)base;
 	deplacor = base;
 	while (i < (i2 * size))
 	{
-		ft_printf("kali3");
+//		ft_printf("kali3");
 		tmp3[i] = tmp[i];
 		i++;
 	}
+//	t = base;
+//	ft_printf("%s", t->name);
 	tmp = (char*)pivot;
 	while (i < size)
 	{
-		ft_printf("kali4");
+//		ft_printf("kali4");
 		tmp3[i] = tmp[i3];
 		i3++;
 		i++;
@@ -96,17 +135,67 @@ void							ft_qsort(void *base, size_t nmemb, size_t size, int(*compar)(const vo
 	i3 = 0;
 	while(i < (nmemb * size))
 	{
-		ft_printf("kali5");
+//		ft_printf("kali5");
 		tmp3[i] = tmp2[i3];
 		i++;
 		i3++;
 	}
+	t = pivot;
+	ft_printf("pivot: %s\n", t->name);
+	ft_printf("-------------------------------0-\n");
+	deplacor = base;
+	i = 0;
+	while (i < nmemb)
+	{
+		t = deplacor;
+		ft_printf("%s\n", t->name);
+		deplacor = deplacor + size;
+		i++;
+	}
+	ft_printf("-------------------------------1-");
+	t = base;
+//	ft_printf("%s", t->name);
 //	tab1 = tab1 - (size * i2);
 //	tab2 = tab2 - (size * (nmemb - i2));
-	pivot = base;
-	deplacor = base + ((i2 * size) + size);
-	ft_qsort(pivot, i2, size, compar);
-	ft_qsort(deplacor, nmemb - i2, size, compar);
+	ft_qsort(base, i2, size, compar);
+	ft_qsort(base + ((i2 * size) + size), nmemb - i2, size, compar);
+}*/
+
+
+void							ft_swap(void *a, void *b)
+{
+	int tmp;
+
+	tmp = *(int*)a;
+	*(int*)a = *(int*)b;
+	*(int*)b = tmp;
+}
+
+//qsort y marche pas bordel
+
+void							ft_qsort(void *base, size_t nmemb, size_t size, int(*compar)(const void *, const void *))
+{
+	void *pivot;
+	int i;
+	int j;
+
+	i = -1;
+	j = 0;
+	pivot =  base + (size * (nmemb - 1));
+	while ((unsigned int)j < nmemb - 1)
+	{
+		if (compar(base + size * j, pivot) <= 0)
+		{
+			i++;
+			ft_swap(base + (size * j), base + (size * i));
+		}
+		j++;
+	}
+	ft_swap(pivot, base + (size * i));
+	if (i >= 1)
+		ft_qsort(base, i + 1, size, compar);
+	if ((nmemb - (i + 1)) > 1)
+		ft_qsort(base + (size * (i + 1)), nmemb - (i + 1), size, compar);
 }
 
 char							secto(struct section_64 *sec, unsigned int n_sect, char **secname)
