@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/02/09 17:28:21 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/12 17:08:50 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,13 +162,28 @@
 }*/
 
 
-void							ft_swap(void *a, void *b)
+void							ft_swap(void *a, void *b, size_t size)
 {
-	int tmp;
+/*	void *tmp;
+	t_nm const *pa = a;
+	t_nm const *pb = b;
 
-	tmp = *(int*)a;
-	*(int*)a = *(int*)b;
-	*(int*)b = tmp;
+	
+//	ft_printf("avant swap a: %s\n", pa->name);
+//	ft_printf("avant swap b: %s\n", pb->name);
+	tmp = (void*)malloc(size);
+	tmp = a;
+	*(size_t*)a = *(size_t*)b;
+	b = tmp;
+//	ft_printf("apres swap a: %s\n", pa->name);
+//	ft_printf("apres swap b: %s\n", pb->name);*/
+
+	void *tmp;
+
+	tmp = (void*)malloc(size);
+	ft_memcpy(tmp, a, size);
+	ft_memcpy(a, b, size);
+	ft_memcpy(b, tmp, size);
 }
 
 //qsort y marche pas bordel
@@ -184,14 +199,14 @@ void							ft_qsort(void *base, size_t nmemb, size_t size, int(*compar)(const vo
 	pivot =  base + (size * (nmemb - 1));
 	while ((unsigned int)j < nmemb - 1)
 	{
-		if (compar(base + size * j, pivot) <= 0)
+		if (compar(base + (size * j), pivot) <= 0)
 		{
 			i++;
-			ft_swap(base + (size * j), base + (size * i));
+			ft_swap(base + (size * j), base + (size * i), size);
 		}
 		j++;
 	}
-	ft_swap(pivot, base + (size * i));
+	ft_swap(pivot, base + (size * (i + 1)), size);
 	if (i >= 1)
 		ft_qsort(base, i + 1, size, compar);
 	if ((nmemb - (i + 1)) > 1)
@@ -230,9 +245,9 @@ static int compare(void const *a, void const *b)
 
 	int ret;
 
-	ret = strcmp(pa->name, pb->name);
-//	ft_printf("%s\n", pa->name);
-//	ft_printf("%s\n", pb->name);
+	ret = ft_strcmp(pa->name, pb->name);
+//	ft_printf("comparaison 1 : %s\n", pa->name);
+//	ft_printf("comparaison 2 : %s\n", pb->name);
 	if (ret == 0)
 	{
 //		ft_printf("wow2\n");
@@ -309,7 +324,6 @@ void						print_output(struct s_stru *stru, \
 		return ;
 	while (++i < stru->sym->nsyms)
 	{
-//		ft_printf("nik1");
 		ret = print_output2(ptr, array, i, stru);
 		if (stru->check == 1)
 			return;
