@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/24 15:09:59 by droly             #+#    #+#             */
-/*   Updated: 2016/04/29 15:34:30 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/14 13:23:13 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ typedef struct		s_printf
 	int				tmp;
 }					t_printf;
 
+void		ft_qsort(void *base, size_t nmemb, size_t size,
+		int (*compar)(const void *, const void *));
 int					ft_printf(const char *format, ...);
 t_printf			seek_len_modif_types(t_printf *lst, const char *format,
 		int i);

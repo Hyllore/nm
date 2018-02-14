@@ -6,19 +6,22 @@
 #    By: droly <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/27 15:32:49 by droly             #+#    #+#              #
-#    Updated: 2018/01/29 16:21:21 by droly            ###   ########.fr        #
+#    Updated: 2018/02/14 14:03:47 by droly            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = nm
 
-SRC = nm.c
+SRC = nm.c \
+	  nm_64.c \
+	  print_output.c \
+	  error.c
 
 OBJ = $(SRC:.c=.o)
 
 LIB = libft/libft.a
 
-FLAGS = -Wall -Wextra
+FLAGS = -Wall -Wextra -Werror
 
 all: makelibft $(NAME)
 

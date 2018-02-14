@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/02/05 13:35:34 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/14 14:15:16 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,14 @@
 # include <stdlib.h>
 # include "libft/libft.h"
 
-
 typedef struct					s_stru
 {
 	struct symtab_command		*sym;
 	struct section_64			*sec;
-	int							i[3];
+	unsigned int				i[3];
 	struct load_command			*lc;
 	char						**secname;
 	struct s_nm					*nm;
-//	struct s_nm					*tmp;
 	off_t						sizefile;
 	char						*stringtable;
 	struct mach_header_64		*header;
@@ -47,5 +45,13 @@ typedef struct					s_nm
 	uint32_t					value;
 	struct s_nm					*next;
 }								t_nm;
+
+char							secto(unsigned int n_sect, char **secname);
+int								checkcorrupt(char *tmp, void *ptr, \
+		struct s_stru *stru);
+void							handle_64(char *ptr, struct s_stru *stru);
+int								exitstr(char *str, int error);
+void							print_output(struct s_stru *stru, \
+		char *ptr);
 
 #endif
