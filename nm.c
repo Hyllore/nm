@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/02/14 14:05:15 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/14 16:50:30 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int					checkcorrupt(char *tmp, void *ptr, struct s_stru *stru)
 {
 	if (ptr >= (void*)tmp)
 	{
+		printf("corrupt\n");
 		stru->check = 1;
 		return (0);
 	}
@@ -38,17 +39,29 @@ int					nm(char *ptr, off_t sizefile)
 	int				magic_number;
 	struct s_stru	*stru;
 
+	magic_number = *(int *)ptr;
 	stru = (t_stru*)malloc(sizeof(t_stru));
 	stru->check = 0;
-	stru->header = (struct mach_header_64 *)ptr;
-	stru->lc = (void *)ptr + sizeof(*stru->header);
-	stru->seg = (struct segment_command_64*)stru->lc;
 	stru->sizefile = sizefile;
-	magic_number = *(int *)ptr;
-	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
-		return (0);
 	if ((unsigned int)magic_number == MH_MAGIC_64)
+	{
+		stru->header = (struct mach_header_64 *)ptr;
+		stru->lc = (void *)ptr + sizeof(*stru->header);
+		stru->seg = (struct segment_command_64*)stru->lc;
+		if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
+			return (0);
 		handle_64(ptr, stru);
+	}
+	if ((unsigned int)magic_number == MH_MAGIC)
+	{
+	
+		stru->header32 = (struct mach_header *)ptr;
+		stru->lc = (void *)ptr + sizeof(*stru->header32);
+		stru->seg32 = (struct segment_command*)stru->lc;
+		if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
+			return (0);
+		handle_32(ptr, stru);
+	}
 	if (stru->check == 1)
 		return (0);
 	return (1);

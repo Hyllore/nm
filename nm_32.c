@@ -1,56 +1,65 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nm_64.c                                            :+:      :+:    :+:   */
+/*   nm_32.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/14 13:43:28 by droly             #+#    #+#             */
-/*   Updated: 2018/02/14 14:33:20 by droly            ###   ########.fr       */
+/*   Created: 2018/02/14 14:20:45 by droly             #+#    #+#             */
+/*   Updated: 2018/02/14 16:51:26 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 
-int		handle_64s3(struct s_stru *stru, char *ptr)
+int		handle_32s3(struct s_stru *stru, char *ptr)
 {
-	stru->secname[stru->i[1]] = stru->sec->sectname;
-	stru->sec = (struct section_64 *)(((void*)stru->sec) + \
-		sizeof(struct section_64));
-	if (checkcorrupt(ptr + stru->sizefile, stru->sec, stru) == 0)
+	stru->secname[stru->i[1]] = stru->sec32->sectname;
+	stru->sec32 = (struct section *)(((void*)stru->sec32) + \
+		sizeof(struct section));
+	if (checkcorrupt(ptr + stru->sizefile, stru->sec32, stru) == 0)
+	{
+		printf("error1");
 		return (0);
+	}
 	stru->i[1]++;
 	stru->i[2]++;
 	return (1);
 }
 
-int		handle_64s2(struct s_stru *stru, struct segment_command_64 *seg,
+int		handle_32s2(struct s_stru *stru, struct segment_command *seg,
 		int nsects, char *ptr)
 {
-	if (stru->lc->cmd == LC_SEGMENT_64)
+	if (stru->lc->cmd == LC_SEGMENT)
 	{
-		seg = (struct segment_command_64*)stru->lc;
+		seg = (struct segment_command*)stru->lc;
 		nsects += seg->nsects;
 	}
 	stru->lc = (void *)stru->lc + stru->lc->cmdsize;
 	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
+	{
+		printf("error2");
 		return (nsects);
+	}
 	stru->i[0]++;
 	return (nsects);
 }
 
-int		handle_64s(struct s_stru *stru, struct \
-		segment_command_64 *seg, char *ptr)
+int		handle_32s(struct s_stru *stru, struct \
+		segment_command *seg, char *ptr)
 {
-	if (stru->lc->cmd == LC_SEGMENT_64)
+	if (stru->lc->cmd == LC_SEGMENT)
 	{
-		seg = (struct segment_command_64*)stru->lc;
-		stru->sec = (struct section_64*)(seg + sizeof(seg) / sizeof(void*));
-		if (checkcorrupt(ptr + stru->sizefile, stru->sec, stru) == 0)
+		seg = (struct segment_command*)stru->lc;
+		stru->sec32 = (struct section*)(seg + sizeof(seg) / sizeof(void*));
+		if (checkcorrupt(ptr + stru->sizefile, stru->sec32, stru) == 0)
+		{
+			printf("error3");
 			return (0);
+		}
 		while (stru->i[2] < seg->nsects)
 		{
-			if (handle_64s3(stru, ptr) == 0)
+			if (handle_32s3(stru, ptr) == 0)
 				return (0);
 		}
 		stru->i[2] = 0;
@@ -59,17 +68,20 @@ int		handle_64s(struct s_stru *stru, struct \
 	{
 		stru->check2 = 0;
 		stru->sym = (struct symtab_command *)stru->lc;
-		print_output(stru, ptr);
+		print_output32(stru, ptr);
 		return (0);
 	}
 	stru->lc = (void *)stru->lc + stru->lc->cmdsize;
 	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
+	{
+		printf("error4");
 		return (0);
+	}
 	stru->i[0]++;
 	return (1);
 }
 
-int		initstru(struct s_stru *stru)
+int		initstru32(struct s_stru *stru)
 {
 	int	nsects;
 
@@ -78,32 +90,35 @@ int		initstru(struct s_stru *stru)
 	stru->i[1] = 0;
 	stru->i[2] = 0;
 	stru->check2 = 1;
-	nsects = stru->seg->nsects;
+	nsects = stru->seg32->nsects;
 	stru->i[2] = nsects;
 	return (nsects);
 }
 
-void	handle_64(char *ptr, struct s_stru *stru)
+void	handle_32(char *ptr, struct s_stru *stru)
 {
 	int	nsects;
 
-	nsects = initstru(stru);
-	while (stru->i[0] < stru->header->ncmds)
+	nsects = initstru32(stru);
+	while (stru->i[0] < stru->header32->ncmds)
 	{
-		nsects = handle_64s2(stru, stru->seg, nsects, ptr);
+		nsects = handle_32s2(stru, stru->seg32, nsects, ptr);
 		if (stru->check == 1)
 			return ;
 	}
 	stru->i[0] = 0;
 	stru->i[2] = 0;
-	stru->lc = (void *)ptr + sizeof(*stru->header);
+	stru->lc = (void *)ptr + sizeof(*stru->header32);
 	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
-		return ;
-	stru->secname = (char **)malloc(sizeof(char*) * nsects);
-	stru->seg = (struct segment_command_64*)stru->lc;
-	while (stru->i[0] < stru->header->ncmds)
 	{
-		if (handle_64s(stru, stru->seg, ptr) == 0)
+		printf("error5");
+		return ;
+	}
+	stru->secname = (char **)malloc(sizeof(char*) * nsects);
+	stru->seg32 = (struct segment_command*)stru->lc;
+	while (stru->i[0] < stru->header32->ncmds)
+	{
+		if (handle_32s(stru, stru->seg32, ptr) == 0)
 			break ;
 		if (stru->check == 1)
 			return ;

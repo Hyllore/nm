@@ -6,7 +6,7 @@
 #    By: droly <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/27 15:32:49 by droly             #+#    #+#              #
-#    Updated: 2018/02/14 14:03:47 by droly            ###   ########.fr        #
+#    Updated: 2018/02/14 14:57:54 by droly            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,9 @@ NAME = nm
 SRC = nm.c \
 	  nm_64.c \
 	  print_output.c \
-	  error.c
+	  error.c \
+	  nm_32.c \
+	  print_output32.c
 
 OBJ = $(SRC:.c=.o)
 
