@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/02/14 16:50:30 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/15 16:42:21 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 char				secto(unsigned int n_sect, char **secname)
 {
+	printf("nsect - 1 : %d", n_sect - 1);
 	if (!ft_strcmp(secname[n_sect - 1], SECT_DATA))
 		return ('D');
 	else if (!ft_strcmp(secname[n_sect - 1], SECT_BSS))
@@ -54,12 +55,16 @@ int					nm(char *ptr, off_t sizefile)
 	}
 	if ((unsigned int)magic_number == MH_MAGIC)
 	{
-	
+		ft_printf("wesh, %d", sizefile);
 		stru->header32 = (struct mach_header *)ptr;
+		printf("way4");
 		stru->lc = (void *)ptr + sizeof(*stru->header32);
+		printf("way3");
 		stru->seg32 = (struct segment_command*)stru->lc;
+		printf("way2");
 		if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
 			return (0);
+		printf("way1");
 		handle_32(ptr, stru);
 	}
 	if (stru->check == 1)
