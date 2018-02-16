@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 12:18:52 by droly             #+#    #+#             */
-/*   Updated: 2018/02/14 14:04:59 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/16 15:39:39 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char							print_output2(char *ptr, struct nlist_64 *array,
 	else if ((array[i].n_type & N_TYPE) == N_PBUD)
 		ret = 'U';
 	else if ((array[i].n_type & N_TYPE) == N_SECT)
-		ret = secto(array[i].n_sect, stru->secname);
+		ret = secto(array[i].n_sect, stru->secname, stru);
 	else if ((array[i].n_type & N_TYPE) == N_INDR)
 		ret = 'I';
 	if ((array[i].n_type & N_STAB) != 0)
@@ -70,7 +70,7 @@ char							print_output2(char *ptr, struct nlist_64 *array,
 	stru->nm[i].name = stru->stringtable + array[i].n_un.n_strx;
 	stru->nm[i].type = ret;
 	stru->nm[i].value = array[i].n_value;
-	if (checkcorrupt(ptr + stru->sizefile, stru->nm[i].name, stru) == 0)
+	if (checkcorrupt(ptr + stru->sizefile, stru->nm[i].name, stru) == 0 || stru->check == 1)
 		return (0);
 	return (ret);
 }
@@ -79,7 +79,7 @@ void							print_output3(struct s_stru *stru, int i)
 {
 	if (stru->nm[i].type != 'u' && stru->nm[i].type != 'U' &&
 	stru->nm[i].type != 'z' && stru->nm[i].type != 'Z')
-		ft_printf("00000001%08x %c %s\n", stru->nm[i].value, stru->nm[i].type, \
+		ft_printf("0000000%d%08x %c %s\n", stru->obj, stru->nm[i].value, stru->nm[i].type, \
 		stru->nm[i].name);
 	else if (stru->nm[i].type != 'z' && stru->nm[i].type != 'Z')
 		ft_printf("                 %c %s\n", stru->nm[i].type,

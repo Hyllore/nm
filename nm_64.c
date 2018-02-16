@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 13:43:28 by droly             #+#    #+#             */
-/*   Updated: 2018/02/14 14:33:20 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/16 15:41:51 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,10 @@ int		initstru(struct s_stru *stru)
 	stru->check2 = 1;
 	nsects = stru->seg->nsects;
 	stru->i[2] = nsects;
+	if (stru->header->filetype == MH_OBJECT)
+		stru->obj = 0;
+	else
+		stru->obj = 1;
 	return (nsects);
 }
 

@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 14:20:45 by droly             #+#    #+#             */
-/*   Updated: 2018/02/14 16:51:26 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/16 15:41:43 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		handle_32s3(struct s_stru *stru, char *ptr)
 		sizeof(struct section));
 	if (checkcorrupt(ptr + stru->sizefile, stru->sec32, stru) == 0)
 	{
-		printf("error1");
+//		printf("error1\n");
 		return (0);
 	}
 	stru->i[1]++;
@@ -38,7 +38,7 @@ int		handle_32s2(struct s_stru *stru, struct segment_command *seg,
 	stru->lc = (void *)stru->lc + stru->lc->cmdsize;
 	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
 	{
-		printf("error2");
+//		printf("error2\n");
 		return (nsects);
 	}
 	stru->i[0]++;
@@ -48,15 +48,17 @@ int		handle_32s2(struct s_stru *stru, struct segment_command *seg,
 int		handle_32s(struct s_stru *stru, struct \
 		segment_command *seg, char *ptr)
 {
+//	printf("hey\n");
 	if (stru->lc->cmd == LC_SEGMENT)
 	{
 		seg = (struct segment_command*)stru->lc;
 		stru->sec32 = (struct section*)(seg + sizeof(seg) / sizeof(void*));
 		if (checkcorrupt(ptr + stru->sizefile, stru->sec32, stru) == 0)
 		{
-			printf("error3");
+//			printf("error3\n");
 			return (0);
 		}
+//		printf("seg->nsect: %d\n", seg->nsects);
 		while (stru->i[2] < seg->nsects)
 		{
 			if (handle_32s3(stru, ptr) == 0)
@@ -64,17 +66,19 @@ int		handle_32s(struct s_stru *stru, struct \
 		}
 		stru->i[2] = 0;
 	}
+//	ft_printf("i : %d\n", stru->i[1]);
 	if (stru->lc->cmd == LC_SYMTAB)
 	{
 		stru->check2 = 0;
 		stru->sym = (struct symtab_command *)stru->lc;
+//		printf("sexname2 : %s\n", stru->secname[26]);
 		print_output32(stru, ptr);
 		return (0);
 	}
 	stru->lc = (void *)stru->lc + stru->lc->cmdsize;
 	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
 	{
-		printf("error4");
+//		printf("error4\n");
 		return (0);
 	}
 	stru->i[0]++;
@@ -92,6 +96,10 @@ int		initstru32(struct s_stru *stru)
 	stru->check2 = 1;
 	nsects = stru->seg32->nsects;
 	stru->i[2] = nsects;
+	if (stru->header->filetype == MH_OBJECT)
+		stru->obj = 0;
+	else
+		stru->obj = 1;
 	return (nsects);
 }
 
@@ -99,6 +107,7 @@ void	handle_32(char *ptr, struct s_stru *stru)
 {
 	int	nsects;
 
+//	printf("ay\n");
 	nsects = initstru32(stru);
 	while (stru->i[0] < stru->header32->ncmds)
 	{
@@ -111,7 +120,7 @@ void	handle_32(char *ptr, struct s_stru *stru)
 	stru->lc = (void *)ptr + sizeof(*stru->header32);
 	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
 	{
-		printf("error5");
+//		printf("error5\n");
 		return ;
 	}
 	stru->secname = (char **)malloc(sizeof(char*) * nsects);

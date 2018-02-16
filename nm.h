@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/02/14 16:51:20 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/16 15:38:53 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct					s_stru
 	struct segment_command		*seg32;
 	int							check;
 	int							check2;
+	int							obj;
 }								t_stru;
 
 typedef struct					s_nm
@@ -49,7 +50,7 @@ typedef struct					s_nm
 	struct s_nm					*next;
 }								t_nm;
 
-char							secto(unsigned int n_sect, char **secname);
+char							secto(unsigned int n_sect, char **secname, struct s_stru *stru);
 int								checkcorrupt(char *tmp, void *ptr, \
 		struct s_stru *stru);
 void							handle_64(char *ptr, struct s_stru *stru);
