@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/02/16 14:39:36 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/19 17:06:49 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,14 @@ int					nm(char *ptr, off_t sizefile)
 	stru = (t_stru*)malloc(sizeof(t_stru));
 	stru->check = 0;
 	stru->sizefile = sizefile;
-	if ((unsigned int)magic_number == MH_MAGIC_64)
+	if ((unsigned int)magic_number == FAT_MAGIC)
+		printf("fat magic\n");
+	if ((unsigned int)magic_number == FAT_CIGAM)
+		printf("fat cigam\n");
+	if ((unsigned int)magic_number == MH_MAGIC_64 || (unsigned int)magic_number == MH_CIGAM_64)
 	{
+		if ((unsigned int)magic_number == MH_CIGAM_64)
+			ptr[0] = reversebytes64((uint64_t)ptr[0], sizefile);
 		stru->header = (struct mach_header_64 *)ptr;
 		stru->lc = (void *)ptr + sizeof(*stru->header);
 		stru->seg = (struct segment_command_64*)stru->lc;
@@ -59,8 +65,10 @@ int					nm(char *ptr, off_t sizefile)
 			return (0);
 		handle_64(ptr, stru);
 	}
-	if ((unsigned int)magic_number == MH_MAGIC)
+	if ((unsigned int)magic_number == MH_MAGIC || (unsigned int)magic_number == MH_CIGAM)
 	{
+//		if ((unsigned int)magic_number == MH_CIGAM)
+//			reversebytes(ptr);
 //		ft_printf("wesh, %d\n", sizefile);
 		stru->header32 = (struct mach_header *)ptr;
 //		printf("way4\n");

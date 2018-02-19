@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/02/16 15:38:53 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/19 17:06:51 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,18 @@
 # include <fcntl.h>
 # include <sys/stat.h>
 # include <stdlib.h>
+# include <mach-o/fat.h>
 # include "libft/libft.h"
+
+#define SWAP4BYTES(val) \
+( (((val) >> 24) & 0x000000FF) | (((val) >>  8) & 0x0000FF00) | \
+  (((val) <<  8) & 0x00FF0000) | (((val) << 24) & 0xFF000000) )
+
+#define SWAP8BYTES(val) \
+((((val) >> 56) & 0x00000000000000FF) | (((val) >> 40) & 0x000000000000FF00) | \
+(((val) >> 24) & 0x0000000000FF0000) | (((val) >>  8) & 0x00000000FF000000) | \
+(((val) <<  8) & 0x000000FF00000000) | (((val) << 24) & 0x0000FF0000000000) | \
+(((val) << 40) & 0x00FF000000000000) | (((val) << 56) & 0xFF00000000000000))
 
 typedef struct					s_stru
 {
@@ -58,5 +69,6 @@ void							handle_32(char *ptr, struct s_stru *stru);
 int								exitstr(char *str, int error);
 void							print_output(struct s_stru *stru, char *ptr);
 void							print_output32(struct s_stru *stru, char *ptr);
+uint64_t	reversebytes64(uint64_t ptr, off_t size);
 
 #endif
