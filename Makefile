@@ -6,7 +6,7 @@
 #    By: droly <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/27 15:32:49 by droly             #+#    #+#              #
-#    Updated: 2018/02/14 14:57:54 by droly            ###   ########.fr        #
+#    Updated: 2018/02/19 12:56:03 by droly            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ SRC = nm.c \
 	  print_output.c \
 	  error.c \
 	  nm_32.c \
-	  print_output32.c
+	  print_output32.c \
+	  reverse.c
 
 OBJ = $(SRC:.c=.o)
 

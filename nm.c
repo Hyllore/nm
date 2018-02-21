@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/02/19 17:06:49 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/21 17:19:18 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,18 @@ int					nm(char *ptr, off_t sizefile)
 	if ((unsigned int)magic_number == FAT_MAGIC)
 		printf("fat magic\n");
 	if ((unsigned int)magic_number == FAT_CIGAM)
-		printf("fat cigam\n");
+	{
+//		stru->fat_header = (struct fat_header *)ptr;
+//		stru->fat_arch = (struct fat_arch*)((void*)ptr + sizeof(stru->fat_header));
+		stru->fat_header = (struct fat_header *)ptr/* + sizeof(*stru->fat_header)*/;
+		stru->fat_arch = (struct fat_arch *)(ptr + sizeof(*stru->fat_header))/* + sizeof(*stru->fat_arch) * 2*/;
+		printf("hehec bon \n");
+		stru->header = (struct mach_header_64*)(stru->fat_arch + stru->fat_arch->offset);
+		printf("hehec bon2 \n");
+		if (stru->header->magic == MH_MAGIC_64 || stru->header->magic == MH_MAGIC || stru->header->magic == MH_CIGAM_64 || stru->header->magic == MH_CIGAM)
+			printf("hehec bon3 \n");
+//		printf("fat cigam : %s\n", stru->fat_arch->size);
+	}
 	if ((unsigned int)magic_number == MH_MAGIC_64 || (unsigned int)magic_number == MH_CIGAM_64)
 	{
 		if ((unsigned int)magic_number == MH_CIGAM_64)
@@ -88,6 +99,7 @@ int					nm(char *ptr, off_t sizefile)
 
 int					check_error(int ac, char **av, int fd, int i)
 {
+	ft_printf("i : %d, ac : %d, name : %s\n", i, ac, av[i]);
 	if (ac < 2)
 	{
 		if ((fd = open("a.out", O_RDONLY)) < 0)
@@ -100,7 +112,7 @@ int					check_error(int ac, char **av, int fd, int i)
 	else if ((fd = open(av[i], O_RDONLY)) < 0)
 	{
 		ft_putstr_fd("Error open\n", 2);
-		return (-1);
+		return (-2);
 	}
 	return (fd);
 }
@@ -113,21 +125,21 @@ int					main(int ac, char **av)
 	int i;
 
 	fd = 0;
-	i = 1;
-	while (i < ac || ac == 1)
+	i = 0;
+	while (++i < ac)
 	{
 		if ((fd = check_error(ac, av, fd, i)) == -1)
 			return (0);
-		if (fstat(fd, &buf) < 0)
+		if (fstat(fd, &buf) < 0 && fd > -2)
 			return (exitstr("Error fstat\n", 2));
-		if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == \
+		if (fd > -2 && (ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == \
 				MAP_FAILED)
 			return (exitstr("Error fstat\n", 2));
-		if (ac > 2)
+		if (fd > -2 && ac > 2)
 			ft_printf("\n%s:\n", av[i]);
-		if (nm(ptr, buf.st_size) == 0)
+		if (fd > -2 && nm(ptr, buf.st_size) == 0)
 			return (exitstr("Error file corrupted\n", 2));
-		if (munmap(ptr, buf.st_size) < 0)
+		if (fd > -2 && munmap(ptr, buf.st_size) < 0)
 			return (exitstr("Error munmap\n", 2));
 		i++;
 		if (ac == 1)
