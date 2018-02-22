@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nm_64.c                                            :+:      :+:    :+:   */
+/*   nm_64_reverse.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/14 13:43:28 by droly             #+#    #+#             */
-/*   Updated: 2018/02/22 13:43:23 by droly            ###   ########.fr       */
+/*   Created: 2018/02/22 15:29:26 by droly             #+#    #+#             */
+/*   Updated: 2018/02/22 16:03:35 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 
-int		handle_64s3(struct s_stru *stru, char *ptr)
+int		handle_64s3_reverse(struct s_stru *stru, char *ptr)
 {
 	stru->secname[stru->i[1]] = stru->sec->sectname;
 	stru->sec = (struct section_64 *)(((void*)stru->sec) + \
@@ -24,7 +24,7 @@ int		handle_64s3(struct s_stru *stru, char *ptr)
 	return (1);
 }
 
-int		handle_64s2(struct s_stru *stru, struct segment_command_64 *seg,
+int		handle_64s2_reverse(struct s_stru *stru, struct segment_command_64 *seg,
 		int nsects, char *ptr)
 {
 	if (stru->lc->cmd == LC_SEGMENT_64)
@@ -39,7 +39,7 @@ int		handle_64s2(struct s_stru *stru, struct segment_command_64 *seg,
 	return (nsects);
 }
 
-int		handle_64s(struct s_stru *stru, struct \
+int		handle_64s_reverse(struct s_stru *stru, struct \
 		segment_command_64 *seg, char *ptr)
 {
 	if (stru->lc->cmd == LC_SEGMENT_64)
@@ -50,7 +50,7 @@ int		handle_64s(struct s_stru *stru, struct \
 			return (0);
 		while (stru->i[2] < seg->nsects)
 		{
-			if (handle_64s3(stru, ptr) == 0)
+			if (handle_64s3_reverse(stru, ptr) == 0)
 				return (0);
 		}
 		stru->i[2] = 0;
@@ -69,7 +69,7 @@ int		handle_64s(struct s_stru *stru, struct \
 	return (1);
 }
 
-int		initstru(struct s_stru *stru)
+int		initstru_reverse(struct s_stru *stru)
 {
 	int	nsects;
 
@@ -87,14 +87,14 @@ int		initstru(struct s_stru *stru)
 	return (nsects);
 }
 
-void	handle_64(char *ptr, struct s_stru *stru)
+void	handle_64_reverse(char *ptr, struct s_stru *stru)
 {
 	int	nsects;
 
-	nsects = initstru(stru);
+	nsects = initstru_reverse(stru);
 	while (stru->i[0] < stru->header->ncmds)
 	{
-		nsects = handle_64s2(stru, stru->seg, nsects, ptr);
+		nsects = handle_64s2_reverse(stru, stru->seg, nsects, ptr);
 		if (stru->check == 1)
 			return ;
 	}
@@ -107,7 +107,7 @@ void	handle_64(char *ptr, struct s_stru *stru)
 	stru->seg = (struct segment_command_64*)stru->lc;
 	while (stru->i[0] < stru->header->ncmds)
 	{
-		if (handle_64s(stru, stru->seg, ptr) == 0)
+		if (handle_64s_reverse(stru, stru->seg, ptr) == 0)
 			break ;
 		if (stru->check == 1)
 			return ;

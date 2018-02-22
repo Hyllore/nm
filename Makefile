@@ -6,7 +6,7 @@
 #    By: droly <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/27 15:32:49 by droly             #+#    #+#              #
-#    Updated: 2018/02/19 12:56:03 by droly            ###   ########.fr        #
+#    Updated: 2018/02/22 16:04:32 by droly            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,11 @@ NAME = nm
 
 SRC = nm.c \
 	  nm_64.c \
+	  nm_64_reverse.c \
 	  print_output.c \
 	  error.c \
 	  nm_32.c \
+	  nm_32_reverse.c \
 	  print_output32.c \
 	  reverse.c
 

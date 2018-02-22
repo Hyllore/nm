@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nm_32.c                                            :+:      :+:    :+:   */
+/*   nm_32_reverse.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/14 14:20:45 by droly             #+#    #+#             */
-/*   Updated: 2018/02/22 15:06:04 by droly            ###   ########.fr       */
+/*   Created: 2018/02/22 15:29:39 by droly             #+#    #+#             */
+/*   Updated: 2018/02/22 16:04:08 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 
-int		handle_32s3(struct s_stru *stru, char *ptr)
+int		handle_32s3_reverse(struct s_stru *stru, char *ptr)
 {
 	stru->secname[stru->i[1]] = stru->sec32->sectname;
 	stru->sec32 = (struct section *)(((void*)stru->sec32) + \
@@ -27,7 +27,7 @@ int		handle_32s3(struct s_stru *stru, char *ptr)
 	return (1);
 }
 
-int		handle_32s2(struct s_stru *stru, struct segment_command *seg,
+int		handle_32s2_reverse(struct s_stru *stru, struct segment_command *seg,
 		int nsects, char *ptr)
 {
 	if (stru->lc->cmd == LC_SEGMENT)
@@ -45,7 +45,7 @@ int		handle_32s2(struct s_stru *stru, struct segment_command *seg,
 	return (nsects);
 }
 
-int		handle_32s(struct s_stru *stru, struct \
+int		handle_32s_reverse(struct s_stru *stru, struct \
 		segment_command *seg, char *ptr)
 {
 //	printf("hey\n");
@@ -61,7 +61,7 @@ int		handle_32s(struct s_stru *stru, struct \
 //		printf("seg->nsect: %d\n", seg->nsects);
 		while (stru->i[2] < seg->nsects)
 		{
-			if (handle_32s3(stru, ptr) == 0)
+			if (handle_32s3_reverse(stru, ptr) == 0)
 				return (0);
 		}
 		stru->i[2] = 0;
@@ -90,7 +90,7 @@ int		handle_32s(struct s_stru *stru, struct \
 	return (1);
 }
 
-int		initstru32(struct s_stru *stru)
+int		initstru32_reverse(struct s_stru *stru)
 {
 	int	nsects;
 
@@ -117,16 +117,16 @@ int		initstru32(struct s_stru *stru)
 	return (nsects);
 }
 
-void	handle_32(char *ptr, struct s_stru *stru)
+void	handle_32_reverse(char *ptr, struct s_stru *stru)
 {
 	int	nsects;
 
 //	printf("ay\n");
-	nsects = initstru32(stru);
+	nsects = initstru32_reverse(stru);
 	while (stru->i[0] < stru->header32->ncmds)
 	{
 //		printf("ay2\n");
-		nsects = handle_32s2(stru, stru->seg32, nsects, ptr);
+		nsects = handle_32s2_reverse(stru, stru->seg32, nsects, ptr);
 		if (stru->check == 1)
 			return ;
 	}
@@ -145,7 +145,7 @@ void	handle_32(char *ptr, struct s_stru *stru)
 	while (stru->i[0] < stru->header32->ncmds)
 	{
 //		printf("ay5\n");
-		if (handle_32s(stru, stru->seg32, ptr) == 0)
+		if (handle_32s_reverse(stru, stru->seg32, ptr) == 0)
 			break ;
 		if (stru->check == 1)
 			return ;
