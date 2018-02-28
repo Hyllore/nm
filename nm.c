@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/02/22 16:57:26 by droly            ###   ########.fr       */
+/*   Updated: 2018/02/28 15:39:48 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ char				secto(unsigned int n_sect, char **secname, struct s_stru *stru)
 //	printf("sexname : %s\n", secname[26]);
 	if (n_sect - 1 > stru->i[1] - 1)
 	{
+		printf("corruptmdr\n");
 		stru->check = 1;
 		return (0);
 	}
@@ -34,7 +35,7 @@ int					checkcorrupt(char *tmp, void *ptr, struct s_stru *stru)
 {
 	if (ptr >= (void*)tmp)
 	{
-//		printf("corrupt\n");
+		printf("corrupt\n");
 		stru->check = 1;
 		return (0);
 	}
@@ -54,7 +55,7 @@ int					nm(char *ptr, off_t sizefile)
 	stru->sizefile = sizefile;
 	if ((unsigned int)magic_number == FAT_MAGIC)
 		printf("fat magic\n");
-	if ((unsigned int)magic_number == FAT_CIGAM)
+	else if ((unsigned int)magic_number == FAT_CIGAM)
 	{
 //		stru->fat_header = (struct fat_header *)ptr;
 //		stru->fat_arch = (struct fat_arch*)((void*)ptr + sizeof(stru->fat_header));
@@ -67,13 +68,16 @@ int					nm(char *ptr, off_t sizefile)
 //		printf("hehec bon : %d\n", size);
 		offset = reversebytes32(stru->fat_arch->offset);
 		printf("hehec bon : %d\n", offset);
-		stru->header = (struct mach_header_64*)(ptr + offset);
 		printf("hehec bon2 \n");
-		magic_number = *(int *)stru->header;
-		if ((unsigned int)magic_number == MH_MAGIC_64)
+		magic_number = *(int *)(ptr + offset);
+		ptr = ptr + offset;
+		/*if ((unsigned int)magic_number == MH_MAGIC_64)
 		{
+			stru->header = (struct mach_header_64*)(ptr + offset);
 			printf("hehec bon3 \n");
 			stru->lc = (void *)stru->header + sizeof(*stru->header);
+			printf("%x\n", stru->lc->cmd);
+			printf("%x\n", LC_SEGMENT_64);
 			stru->seg = (struct segment_command_64*)stru->lc;
 			if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
 				return (0);
@@ -81,8 +85,15 @@ int					nm(char *ptr, off_t sizefile)
 		}
 		if ((unsigned int)magic_number == MH_MAGIC )
 		{
+			stru->header32 = (struct mach_header*)(ptr + offset);
 			printf("hehec bon4 \n");
-			handle_32((void*)stru->header, stru);
+			stru->lc = (void *)stru->header32 + sizeof(*stru->header32);
+			printf("%x\n", stru->lc->cmd);
+			printf("%x\n", LC_SEGMENT_64);
+			stru->seg32 = (struct segment_command*)stru->lc;
+			if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
+				return (0);
+			handle_32((void*)stru->header32, stru);
 		}
 		if ((unsigned int)magic_number == MH_CIGAM_64)
 		{
@@ -93,7 +104,7 @@ int					nm(char *ptr, off_t sizefile)
 		{
 			printf("hehec bon6 \n");
 			handle_32_reverse((void*)stru->header, stru);
-		}
+		}*/
 //		printf("fat cigam : %s\n", stru->fat_arch->size);
 	}
 	if ((unsigned int)magic_number == MH_MAGIC_64 || (unsigned int)magic_number == MH_CIGAM_64)
