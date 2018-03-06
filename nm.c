@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/03/05 17:05:51 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/06 17:16:00 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,16 @@ int					nm(char *ptr, off_t sizefile)
 	int i;
 	int check;
 	int nbarch;
+	void *tmpptr;
 //	uint32_t		magic;
 
 	nbarch = 1;
 	check = 0;
 	i = 0;
-	magic_number = *(int *)ptr;
 	stru = (t_stru*)malloc(sizeof(t_stru));
 	stru->check = 0;
 	stru->sizefile = sizefile;
+	magic_number = *(int *)ptr;
 	printf("heymdr\n");
 	if ((unsigned int)magic_number == FAT_CIGAM)
 	{
@@ -66,63 +67,23 @@ int					nm(char *ptr, off_t sizefile)
 //		if (//add si architecture diff || si diff de 64 bits)
 		nbarch = reversebytes32(stru->fat_header->nfat_arch);
 	}
-	printf("nb arch %d\n", nbarch);
+	printf("nb arch %d, magic_number : %d\n", nbarch, magic_number);
+	tmpptr = ptr;
 	while (i < nbarch)
 	{
-		ft_printf("yo\n");
+		magic_number = *(int *)tmpptr;
+		ft_printf("yo, %d\n", i);
 		if ((unsigned int)magic_number == FAT_MAGIC)
 			printf("fat magic\n");
 		else if ((unsigned int)magic_number == FAT_CIGAM)
 		{
-///		stru->fat_header = (struct fat_header *)ptr;
-//		stru->fat_arch = (struct fat_arch*)((void*)ptr + sizeof(stru->fat_header));
-//		stru->fat_header = (struct fat_header *)((void*)ptr + sizeof(*stru->fat_header));
-//		stru->fat_arch = ((void*)ptr + sizeof(struct fat_header));
-			stru->fat_arch = ((void*)ptr + sizeof(struct fat_header));
-//		stru->fat_arch = (struct fat_arch *)ptr + sizeof(*stru->fat_header)/* + sizeof(*stru->fat_arch) * 2*/;
-//		stru->fat_arch = (struct fat_arch *)((void*)stru->fat_header + sizeof(struct fat_header))/* + (1 * sizeof(struct fat_arch))*/;
-//		size = reversebytes32(stru->fat_arch->size);
-//		printf("hehec bon : %d\n", size);
+			stru->fat_header = (struct fat_header *)ptr;
+			stru->fat_arch = ((void*)tmpptr + sizeof(struct fat_header) + (sizeof(struct fat_arch) * i));
 			offset = reversebytes32(stru->fat_arch->offset);
 			printf("hehec bon : %d\n", offset);
 			printf("hehec bon2 \n");
-			magic_number = *(int *)(ptr + offset);
-			ptr = ptr + offset;
-		/*if ((unsigned int)magic_number == MH_MAGIC_64)
-		{
-			stru->header = (struct mach_header_64*)(ptr + offset);
-			printf("hehec bon3 \n");
-			stru->lc = (void *)stru->header + sizeof(*stru->header);
-			printf("%x\n", stru->lc->cmd);
-			printf("%x\n", LC_SEGMENT_64);
-			stru->seg = (struct segment_command_64*)stru->lc;
-			if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
-				return (0);
-			handle_64((void*)stru->header, stru);
-		}
-		if ((unsigned int)magic_number == MH_MAGIC )
-		{
-			stru->header32 = (struct mach_header*)(ptr + offset);
-			printf("hehec bon4 \n");
-			stru->lc = (void *)stru->header32 + sizeof(*stru->header32);
-			printf("%x\n", stru->lc->cmd);
-			printf("%x\n", LC_SEGMENT_64);
-			stru->seg32 = (struct segment_command*)stru->lc;
-			if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
-				return (0);
-			handle_32((void*)stru->header32, stru);
-		}
-		if ((unsigned int)magic_number == MH_CIGAM_64)
-		{
-			printf("hehec bon5 \n");
-			handle_64_reverse((void*)stru->header, stru);
-		}
-		if ((unsigned int)magic_number == MH_CIGAM)
-		{
-			printf("hehec bon6 \n");
-			handle_32_reverse((void*)stru->header, stru);
-		}*/
-//		printf("fat cigam : %s\n", stru->fat_arch->size);
+			magic_number = *(int *)(tmpptr + offset);
+			ptr = tmpptr + offset;
 		}
 		if ((unsigned int)magic_number == MH_MAGIC_64)
 		{
@@ -155,6 +116,7 @@ int					nm(char *ptr, off_t sizefile)
 //a editer
 		if ((unsigned int)magic_number == MH_CIGAM)
 		{
+			printf("wesh");
 			stru->header32 = (struct mach_header *)ptr;
 			stru->lc = (void *)ptr + sizeof(*stru->header32);
 			stru->seg32 = (struct segment_command*)stru->lc;
