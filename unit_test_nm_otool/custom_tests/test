@@ -1,0 +1,453 @@
+i : 1, ac : 151, name : /usr/local/bin/ClassInitGenerator
+
+/usr/local/bin/ClassInitGenerator:
+yo, 0
+i : 3, ac : 151, name : /usr/local/bin/VBoxAutostart
+
+/usr/local/bin/VBoxAutostart:
+yo, 0
+i : 5, ac : 151, name : /usr/local/bin/VBoxBugReport
+
+/usr/local/bin/VBoxBugReport:
+yo, 0
+i : 7, ac : 151, name : /usr/local/bin/VBoxHeadless
+
+/usr/local/bin/VBoxHeadless:
+yo, 0
+i : 9, ac : 151, name : /usr/local/bin/VBoxVRDP
+
+/usr/local/bin/VBoxVRDP:
+yo, 0
+i : 11, ac : 151, name : /usr/local/bin/al
+
+/usr/local/bin/al:
+yo, 0
+i : 13, ac : 151, name : /usr/local/bin/asp-state
+
+/usr/local/bin/asp-state:
+yo, 0
+i : 15, ac : 151, name : /usr/local/bin/asp-state4
+
+/usr/local/bin/asp-state4:
+yo, 0
+i : 17, ac : 151, name : /usr/local/bin/brew
+
+/usr/local/bin/brew:
+yo, 0
+i : 19, ac : 151, name : /usr/local/bin/bundler
+
+/usr/local/bin/bundler:
+yo, 0
+i : 21, ac : 151, name : /usr/local/bin/cccheck
+
+/usr/local/bin/cccheck:
+yo, 0
+i : 23, ac : 151, name : /usr/local/bin/cert2spc
+
+/usr/local/bin/cert2spc:
+yo, 0
+i : 25, ac : 151, name : /usr/local/bin/chktrust
+
+/usr/local/bin/chktrust:
+yo, 0
+i : 27, ac : 151, name : /usr/local/bin/dbsessmgr
+
+/usr/local/bin/dbsessmgr:
+yo, 0
+i : 29, ac : 151, name : /usr/local/bin/dbsessmgr4
+
+/usr/local/bin/dbsessmgr4:
+yo, 0
+i : 31, ac : 151, name : /usr/local/bin/disco
+
+/usr/local/bin/disco:
+yo, 0
+i : 33, ac : 151, name : /usr/local/bin/docker
+
+/usr/local/bin/docker:
+yo, 0
+i : 35, ac : 151, name : /usr/local/bin/docker-diagnose
+
+/usr/local/bin/docker-diagnose:
+yo, 0
+i : 37, ac : 151, name : /usr/local/bin/dtd2rng
+
+/usr/local/bin/dtd2rng:
+yo, 0
+i : 39, ac : 151, name : /usr/local/bin/endpointscfg.py
+
+/usr/local/bin/endpointscfg.py:
+yo, 0
+i : 41, ac : 151, name : /usr/local/bin/fastcgi-mono-server
+
+/usr/local/bin/fastcgi-mono-server:
+yo, 0
+i : 43, ac : 151, name : /usr/local/bin/fastcgi-mono-server4
+
+/usr/local/bin/fastcgi-mono-server4:
+yo, 0
+i : 45, ac : 151, name : /usr/local/bin/fsharpi
+
+/usr/local/bin/fsharpi:
+yo, 0
+i : 47, ac : 151, name : /usr/local/bin/gacutil2
+
+/usr/local/bin/gacutil2:
+yo, 0
+i : 49, ac : 151, name : /usr/local/bin/gapi2-fixup
+
+/usr/local/bin/gapi2-fixup:
+yo, 0
+i : 51, ac : 151, name : /usr/local/bin/gcloud
+
+/usr/local/bin/gcloud:
+yo, 0
+i : 53, ac : 151, name : /usr/local/bin/git-credential-gcloud.sh
+
+/usr/local/bin/git-credential-gcloud.sh:
+yo, 0
+i : 55, ac : 151, name : /usr/local/bin/httpcfg
+
+/usr/local/bin/httpcfg:
+yo, 0
+i : 57, ac : 151, name : /usr/local/bin/ikdasm
+
+/usr/local/bin/ikdasm:
+yo, 0
+i : 59, ac : 151, name : /usr/local/bin/installBrew.rb
+
+/usr/local/bin/installBrew.rb:
+yo, 0
+i : 61, ac : 151, name : /usr/local/bin/ipy
+
+/usr/local/bin/ipy:
+yo, 0
+i : 63, ac : 151, name : /usr/local/bin/ipyw
+
+/usr/local/bin/ipyw:
+yo, 0
+i : 65, ac : 151, name : /usr/local/bin/ir
+
+/usr/local/bin/ir:
+yo, 0
+i : 67, ac : 151, name : /usr/local/bin/irw
+
+/usr/local/bin/irw:
+yo, 0
+i : 69, ac : 151, name : /usr/local/bin/lc
+
+/usr/local/bin/lc:
+yo, 0
+i : 71, ac : 151, name : /usr/local/bin/makecert
+
+/usr/local/bin/makecert:
+yo, 0
+i : 73, ac : 151, name : /usr/local/bin/mcs
+
+/usr/local/bin/mcs:
+yo, 0
+i : 75, ac : 151, name : /usr/local/bin/mdoc
+
+/usr/local/bin/mdoc:
+yo, 0
+i : 77, ac : 151, name : /usr/local/bin/mdoc-export-html
+
+/usr/local/bin/mdoc-export-html:
+yo, 0
+i : 79, ac : 151, name : /usr/local/bin/mdoc-update
+
+/usr/local/bin/mdoc-update:
+yo, 0
+i : 81, ac : 151, name : /usr/local/bin/mdvalidater
+
+/usr/local/bin/mdvalidater:
+yo, 0
+i : 83, ac : 151, name : /usr/local/bin/mod
+
+/usr/local/bin/mod:
+yo, 0
+i : 85, ac : 151, name : /usr/local/bin/mod-mono-server2
+
+/usr/local/bin/mod-mono-server2:
+yo, 0
+i : 87, ac : 151, name : /usr/local/bin/mono
+
+/usr/local/bin/mono:
+yo, 0
+i : 89, ac : 151, name : /usr/local/bin/mono-boehm
+
+/usr/local/bin/mono-boehm:
+yo, 0
+i : 91, ac : 151, name : /usr/local/bin/mono-configuration-crypto
+
+/usr/local/bin/mono-configuration-crypto:
+yo, 0
+i : 93, ac : 151, name : /usr/local/bin/mono-find-requires
+
+/usr/local/bin/mono-find-requires:
+yo, 0
+i : 95, ac : 151, name : /usr/local/bin/mono-heapviz
+
+/usr/local/bin/mono-heapviz:
+yo, 0
+i : 97, ac : 151, name : /usr/local/bin/mono-service2
+
+/usr/local/bin/mono-service2:
+yo, 0
+i : 99, ac : 151, name : /usr/local/bin/mono-shlib-cop
+
+/usr/local/bin/mono-shlib-cop:
+yo, 0
+i : 101, ac : 151, name : /usr/local/bin/mono-xmltool
+
+/usr/local/bin/mono-xmltool:
+yo, 0
+i : 103, ac : 151, name : /usr/local/bin/monodocer
+
+/usr/local/bin/monodocer:
+yo, 0
+i : 105, ac : 151, name : /usr/local/bin/monodocs2slashdoc
+
+/usr/local/bin/monodocs2slashdoc:
+yo, 0
+i : 107, ac : 151, name : /usr/local/bin/monop
+
+/usr/local/bin/monop:
+yo, 0
+i : 109, ac : 151, name : /usr/local/bin/mozroots
+
+/usr/local/bin/mozroots:
+yo, 0
+i : 111, ac : 151, name : /usr/local/bin/node
+
+/usr/local/bin/node:
+yo, 0
+i : 113, ac : 151, name : /usr/local/bin/npm
+
+/usr/local/bin/npm:
+yo, 0
+i : 115, ac : 151, name : /usr/local/bin/nuget
+
+/usr/local/bin/nuget:
+yo, 0
+i : 117, ac : 151, name : /usr/local/bin/nunit-console2
+
+/usr/local/bin/nunit-console2:
+yo, 0
+i : 119, ac : 151, name : /usr/local/bin/pedump
+
+/usr/local/bin/pedump:
+yo, 0
+i : 121, ac : 151, name : /usr/local/bin/peverify
+
+/usr/local/bin/peverify:
+yo, 0
+i : 123, ac : 151, name : /usr/local/bin/pip2
+
+/usr/local/bin/pip2:
+yo, 0
+i : 125, ac : 151, name : /usr/local/bin/prj2make
+
+/usr/local/bin/prj2make:
+yo, 0
+i : 127, ac : 151, name : /usr/local/bin/resgen2
+
+/usr/local/bin/resgen2:
+yo, 0
+i : 129, ac : 151, name : /usr/local/bin/setreg
+
+/usr/local/bin/setreg:
+yo, 0
+i : 131, ac : 151, name : /usr/local/bin/signcode
+
+/usr/local/bin/signcode:
+yo, 0
+i : 133, ac : 151, name : /usr/local/bin/soapsuds
+
+/usr/local/bin/soapsuds:
+yo, 0
+i : 135, ac : 151, name : /usr/local/bin/sqlsharp
+
+/usr/local/bin/sqlsharp:
+yo, 0
+i : 137, ac : 151, name : /usr/local/bin/uninstall_cuda_drv.pl
+
+/usr/local/bin/uninstall_cuda_drv.pl:
+yo, 0
+i : 139, ac : 151, name : /usr/local/bin/vbnc
+
+/usr/local/bin/vbnc:
+yo, 0
+i : 141, ac : 151, name : /usr/local/bin/vbox-img
+
+/usr/local/bin/vbox-img:
+yo, 0
+i : 143, ac : 151, name : /usr/local/bin/vpnkit
+
+/usr/local/bin/vpnkit:
+yo, 0
+i : 145, ac : 151, name : /usr/local/bin/wsdl2
+
+/usr/local/bin/wsdl2:
+yo, 0
+i : 147, ac : 151, name : /usr/local/bin/xsd
+
+/usr/local/bin/xsd:
+yo, 0
+i : 149, ac : 151, name : /usr/local/bin/xsp2
+
+/usr/local/bin/xsp2:
+yo, 0
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1395597603
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : -17958193
+magic64heymdr
+nb arch 1, magic_number : -17958193
+magic64heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1966022947
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1395597603
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : -17958194
+magic32
+heymdr
+nb arch 1, magic_number : -17958194
+magic32
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1966022947
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : -17958193
+magic64heymdr
+nb arch 1, magic_number : 1966022947
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : -17958194
+magic32
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1966022947
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1966022947
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : -17958193
+magic64heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
+heymdr
+nb arch 1, magic_number : 1647255843
