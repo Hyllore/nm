@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/03/08 11:05:53 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/09 15:22:22 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <sys/stat.h>
 # include <stdlib.h>
 # include <mach-o/fat.h>
-# include "libft/libft.h"
+# include "../libft/libft.h"
 # include <ar.h>
 # include <mach-o/ranlib.h>
 

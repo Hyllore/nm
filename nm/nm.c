@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/03/08 15:32:08 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/09 14:36:52 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int					nm(char *ptr, off_t sizefile)
 	int nbarch;
 	void *tmpptr;
 	struct ranlib	*ran;
+	struct ar_hdr	*ar;
 //	uint32_t		magic;
 
 	nbarch = 1;
@@ -143,8 +144,10 @@ int					nm(char *ptr, off_t sizefile)
 		}
 		if ((unsigned int)magic_number == 0x72613c21)
 		{
-			ran = (struct ranlib*)ptr;
-			printf("arch : %D\n", ran->ran_off);
+			ar = (void*)ptr + 8;
+			ran = (void*)ar + sizeof(ar) + 2356;
+			printf("ar name : %s\n", ar->ar_name);
+			printf("arch : %d\n", ran->ran_off);
 			printf("ARCHIVE\n");
 			stru->sym = (struct symtab_command*)ptr + 8;
 //			printf("size : %d", stru->sym->size);
