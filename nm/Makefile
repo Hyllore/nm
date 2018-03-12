@@ -6,7 +6,7 @@
 #    By: droly <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/27 15:32:49 by droly             #+#    #+#              #
-#    Updated: 2018/03/09 15:23:03 by droly            ###   ########.fr        #
+#    Updated: 2018/03/12 10:15:34 by droly            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,13 +31,13 @@ FLAGS = -Wall -Wextra -Werror
 all: makelibft $(NAME)
 
 $(NAME): $(OBJ)
-	@echo "✅  \\033[1;35;mStart compilation...\033[0m"
+	@echo "✅  \\033[1;35;mStart compilation (nm)...\033[0m"
 	@clang $(FLAGS) -c $(SRC)
 	@clang $(LIB) $(OBJ) -o $(NAME)
-	@echo "✅  \\033[1;32;mCompilation success !\033[0m"
+	@echo "✅  \\033[1;32;mCompilation success (nm) !\033[0m"
 
 makelibft:
-	@echo "✅  \\033[1;36;mLinking libft...\033[0m"
+	@echo "✅  \\033[1;36;mLinking libft (nm)...\033[0m"
 	@make -C ../libft/
 
 clean:
@@ -46,7 +46,7 @@ clean:
 	@rm -f $(OBJ)
 
 fclean: clean
-	@echo "✅  \\033[1;31;mDeleting all..\033[0m"
+	@echo "✅  \\033[1;31;mDeleting all (nm)..\033[0m"
 	@make fclean -C ../libft/
 	@rm -f $(NAME)
 

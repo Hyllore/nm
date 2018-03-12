@@ -6,20 +6,15 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 13:43:28 by droly             #+#    #+#             */
-/*   Updated: 2018/03/12 16:18:29 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/12 17:13:17 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "nm.h"
+#include "otool.h"
 
 int		handle_64s3(struct s_stru *stru, char *ptr)
 {
-	char *tmp;
-
-	tmp  = ptr;
-	tmp = ptr + stru->sec->offset + 1;
-	printf("lol\n");
-	printf("mdr : %s, hexa octet : %x\n", stru->sec->sectname, (int)*tmp);
+	printf("%s\n", stru->sec->sectname);
 	stru->secname[stru->i[1]] = stru->sec->sectname;
 	stru->sec = (struct section_64 *)(((void*)stru->sec) + \
 		sizeof(struct section_64));
@@ -57,6 +52,7 @@ int		handle_64s(struct s_stru *stru, struct \
 {
 	if (stru->lc->cmd == LC_SEGMENT_64)
 	{
+		printf("segment64\n");
 		seg = (struct segment_command_64*)stru->lc;
 		stru->sec = (struct section_64*)(seg + sizeof(seg) / sizeof(void*));
 		if (checkcorrupt(ptr + stru->sizefile, stru->sec, stru) == 0)
@@ -73,6 +69,7 @@ int		handle_64s(struct s_stru *stru, struct \
 	}
 	if (stru->lc->cmd == LC_SYMTAB)
 	{
+		printf("symtab\n");
 		stru->check2 = 0;
 		stru->sym = (struct symtab_command *)stru->lc;
 		print_output(stru, ptr);

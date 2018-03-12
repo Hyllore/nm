@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/09 16:44:15 by droly             #+#    #+#             */
-/*   Updated: 2018/03/09 16:55:02 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/12 11:25:27 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,19 @@
 # include <sys/stat.h>
 # include <stdlib.h>
 # include <mach-o/fat.h>
-# include "libft/libft.h"
+# include "../libft/libft.h"
 # include <ar.h>
 # include <mach-o/ranlib.h>
+
+#define SWAP4BYTES(val) \
+( (((val) >> 24) & 0x000000FF) | (((val) >>  8) & 0x0000FF00) | \
+  (((val) <<  8) & 0x00FF0000) | (((val) << 24) & 0xFF000000) )
+
+#define SWAP8BYTES(val) \
+((((val) >> 56) & 0x00000000000000FF) | (((val) >> 40) & 0x000000000000FF00) | \
+(((val) >> 24) & 0x0000000000FF0000) | (((val) >>  8) & 0x00000000FF000000) | \
+(((val) <<  8) & 0x000000FF00000000) | (((val) << 24) & 0x0000FF0000000000) | \
+(((val) << 40) & 0x00FF000000000000) | (((val) << 56) & 0xFF00000000000000))
 
 typedef struct					s_stru
 {
@@ -47,6 +57,25 @@ typedef struct					s_stru
 	int							obj;
 }								t_stru;
 
-int		exitstr(char *str, int errori);
+typedef struct					s_nm
+{
+	char						*name;
+	char						type;
+	uint32_t					value;
+	struct s_nm					*next;
+}								t_nm;
+
+char							secto(unsigned int n_sect, char **secname, struct s_stru *stru);
+int								checkcorrupt(char *tmp, void *ptr, \
+		struct s_stru *stru);
+void							handle_64(char *ptr, struct s_stru *stru);
+void							handle_32(char *ptr, struct s_stru *stru);
+int								exitstr(char *str, int error);
+void							print_output(struct s_stru *stru, char *ptr);
+void							print_output32(struct s_stru *stru, char *ptr);
+uint64_t	reversebytes64(uint64_t nb);
+uint32_t	reversebytes32(uint32_t nb);
+void	handle_32_reverse(char *ptr, struct s_stru *stru);
+void	handle_64_reverse(char *ptr, struct s_stru *stru);
 
 #endif

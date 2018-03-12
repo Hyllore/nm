@@ -6,49 +6,44 @@
 #    By: droly <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/27 15:32:49 by droly             #+#    #+#              #
-#    Updated: 2018/03/12 17:06:07 by droly            ###   ########.fr        #
+#    Updated: 2018/03/12 10:16:55 by droly            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = otool
+#NAME = nm-otool
 
-SRC = otool.c \
-	  error.c \
-	  otool_32.c \
-	  otool_32_reverse.c \
-	  otool_64.c \
-	  otool_64_reverse.c \
-	  print_output.c \
-	  print_output32.c \
-	  reverse.c \
+#SRC = otool.c \
+#	  error.c
 
-OBJ = $(SRC:.c=.o)
+#OBJ = $(SRC:.c=.o)
 
-LIB = ../libft/libft.a
+#LIB = ../libft/libft.a
 
-FLAGS = -Wall -Wextra -Werror
+#FLAGS = -Wall -Wextra -Werror
 
-all: makelibft $(NAME)
+all: makenm-otool
 
-$(NAME): $(OBJ)
-	@echo "✅  \\033[1;35;mStart compilation (otool)...\033[0m"
-	@clang $(FLAGS) -c $(SRC)
-	@clang $(LIB) $(OBJ) -o $(NAME)
-	@echo "✅  \\033[1;32;mCompilation success (otool) !\033[0m"
+#$(NAME): $(OBJ)
+#	@echo "✅  \\033[1;35;mStart compilation...\033[0m"
+#	@clang $(FLAGS) -c $(SRC)
+#	@clang $(LIB) $(OBJ) -o $(NAME)
+#	@echo "✅  \\033[1;32;mCompilation success !\033[0m"
 
-makelibft:
-	@echo "✅  \\033[1;36;mLinking libft (otool)...\033[0m"
-	@make -C ../libft/
+makenm-otool:
+	@echo "✅  \\033[1;36;mcompiling nm...\033[0m"
+	@make -C ./nm/
+	@echo "✅  \\033[1;36;mcompiling otool...\033[0m"
+	@make -C ./otool/
 
 clean:
-	@echo "✅  \\033[1;31;mCleaning *.o (otool)...\033[0m"
-	@make clean -C ../libft/
-	@rm -f $(OBJ)
+	@echo "✅  \\033[1;31;mCleaning *.o...\033[0m"
+	@make clean -C ./otool/
+	@make clean -C ./nm/
 
 fclean: clean
-	@echo "✅  \\033[1;31;mDeleting all (otool)...\033[0m"
-	@make fclean -C ../libft/
-	@rm -f $(NAME)
+	@echo "✅  \\033[1;31;mDeleting all..\033[0m"
+	@make fclean -C ./otool/
+	@make fclean -C ./nm/
 
 re: fclean all
 

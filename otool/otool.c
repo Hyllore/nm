@@ -6,19 +6,29 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/09 15:18:26 by droly             #+#    #+#             */
-/*   Updated: 2018/03/09 16:55:05 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/12 17:08:24 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "otool.h"
 
-uint32_t reversebytes32(uint32_t nb)
+char				secto(unsigned int n_sect, char **secname, struct s_stru *stru)
 {
-	nb = ((nb & 0x000000FF	) << 24 |
-			(nb & 0x0000FF00) << 8 |
-			(nb & 0x00FF0000) >> 8 |
-			(nb & 0xFF000000) >> 24);
-	return (nb);
+//	printf("nsect - 1 : %d\n", n_sect - 1);
+//	printf("sexname : %s\n", secname[26]);
+	if (n_sect - 1 > stru->i[1] - 1)
+	{
+		printf("corruptmdr\n");
+		stru->check = 1;
+		return (0);
+	}
+	if (!ft_strcmp(secname[n_sect - 1], SECT_DATA))
+		return ('D');
+	else if (!ft_strcmp(secname[n_sect - 1], SECT_BSS))
+		return ('B');
+	else if (!ft_strcmp(secname[n_sect - 1], SECT_TEXT))
+		return ('T');
+	return ('S');
 }
 
 int					checkcorrupt(char *tmp, void *ptr, struct s_stru *stru)
@@ -98,7 +108,7 @@ int					otool(char *ptr, off_t sizefile)
 			stru->seg = (struct segment_command_64*)stru->lc;
 			if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
 				return (0);
-//			handle_64(ptr, stru);
+			handle_64(ptr, stru);
 		}
 //a editer
 		if ((unsigned int)magic_number == MH_CIGAM_64)
@@ -109,7 +119,7 @@ int					otool(char *ptr, off_t sizefile)
 			stru->seg = (struct segment_command_64*)stru->lc;
 			if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
 				return (0);
-//			handle_64_reverse(ptr, stru);
+			handle_64_reverse(ptr, stru);
 		}
 		if ((unsigned int)magic_number == MH_MAGIC)
 		{
@@ -119,7 +129,7 @@ int					otool(char *ptr, off_t sizefile)
 			stru->seg32 = (struct segment_command*)stru->lc;
 			if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
 				return (0);
-//			handle_32(ptr, stru);
+			handle_32(ptr, stru);
 		}
 //a editer
 		if ((unsigned int)magic_number == MH_CIGAM)
@@ -130,7 +140,7 @@ int					otool(char *ptr, off_t sizefile)
 			stru->seg32 = (struct segment_command*)stru->lc;
 			if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
 				return (0);
-//			handle_32_reverse(ptr, stru);
+			handle_32_reverse(ptr, stru);
 		}
 		if ((unsigned int)magic_number == 0x72613c21)
 		{
