@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/03/12 17:04:04 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/13 17:05:31 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int					checkcorrupt(char *tmp, void *ptr, struct s_stru *stru)
 	return (1);
 }
 
-int					nm(char *ptr, off_t sizefile)
+int					nm(char *ptr, off_t sizefile, char *name)
 {
 	int				magic_number;
 	struct s_stru	*stru;
@@ -53,6 +53,7 @@ int					nm(char *ptr, off_t sizefile)
 	void *tmpptr;
 	struct ranlib	*ran;
 	struct ar_hdr	*ar;
+	char			**info;
 //	uint32_t		magic;
 
 	nbarch = 1;
@@ -113,13 +114,12 @@ int					nm(char *ptr, off_t sizefile)
 //a editer
 		if ((unsigned int)magic_number == MH_CIGAM_64)
 		{
-			printf("cigam64\n");
+			ft_printf("cigam64\n");
 			stru->header = (struct mach_header_64 *)ptr;
 			stru->lc = (void *)ptr + sizeof(*stru->header);
 			stru->seg = (struct segment_command_64*)stru->lc;
 			if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
 				return (0);
-			handle_64_reverse(ptr, stru);
 		}
 		if ((unsigned int)magic_number == MH_MAGIC)
 		{
@@ -134,22 +134,34 @@ int					nm(char *ptr, off_t sizefile)
 //a editer
 		if ((unsigned int)magic_number == MH_CIGAM)
 		{
-			printf("cigam32\n");
+			ft_printf("cigam32\n");
 			stru->header32 = (struct mach_header *)ptr;
 			stru->lc = (void *)ptr + sizeof(*stru->header32);
 			stru->seg32 = (struct segment_command*)stru->lc;
 			if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
 				return (0);
-			handle_32_reverse(ptr, stru);
 		}
 		if ((unsigned int)magic_number == 0x72613c21)
 		{
-			ar = (void*)ptr + 8;
-			ran = (void*)ar + sizeof(ar) + 2356;
-			printf("ar name : %s\n", ar->ar_name);
-			printf("arch : %d\n", ran->ran_off);
-			printf("ARCHIVE\n");
-			stru->sym = (struct symtab_command*)ptr + 8;
+			info = ft_strsplit(ptr + SARMAG, ' ');
+			ar = (void*)ptr + SARMAG + sizeof(struct ar_hdr) + ft_atoi(info[5]);
+			info = ft_strsplit((void*)ar, ' ');
+//			ar = (void*)ar + sizeof(ar) + 2356;
+			ran = 0;
+//			printf("ar name : %s\n", ar->ar_fmag);
+//			printf("arch : %d\n", ran->ran_off);
+//			printf("ARCHIVE\n");
+			while (checkcorrupt(ptr + stru->sizefile, (void*)ar + sizeof(struct ar_hdr) + ft_atoi(info[5]) - 1, stru) != 0)
+			{
+				ft_printf("%s(%s):\n", name, ft_strsub(info[6], 2, ft_strlen(info[6])));
+//				ft_printf("size : %d\n", ft_atoi(ft_strsub(ar->ar_name, 3, ft_strlen(ar->ar_name))));
+//				ft_printf("size struct : %d size fmag : %d\n", sizeof(struct ar_hdr), sizeof(ar->ar_fmag));
+				nm((void*)ar + sizeof(struct ar_hdr) + ft_atoi(ft_strsub(ar->ar_name, 3, ft_strlen(ar->ar_name))), ft_atoi(info[5]), name);
+				if (checkcorrupt(ptr + stru->sizefile, (void*)ar + sizeof(struct ar_hdr) + ft_atoi(info[5]) - 1, stru) != 0)
+					ar = (void*)ar + sizeof(struct ar_hdr) + ft_atoi(info[5]);
+				info = ft_strsplit((void*)ar, ' ');
+			}
+//			stru->sym = (struct symtab_command*)ptr + 8;
 //			printf("size : %d", stru->sym->size);
 		}
 		if (stru->check == 1)
@@ -199,7 +211,7 @@ int					main(int ac, char **av)
 			return (exitstr("Error fstat\n", 2));
 		if (fd > -2 && ac > 2)
 			ft_printf("\n%s:\n", av[i]);
-		if (fd > -2 && nm(ptr, buf.st_size) == 0)
+		if (fd > -2 && nm(ptr, buf.st_size, av[i]) == 0)
 			return (exitstr("Error file corrupted\n", 2));
 		if (fd > -2 && munmap(ptr, buf.st_size) < 0)
 			return (exitstr("Error munmap\n", 2));
