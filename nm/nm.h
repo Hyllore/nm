@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/03/09 15:22:22 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/14 12:03:09 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct					s_stru
 	char						**secname;
 	struct s_nm					*nm;
 	off_t						sizefile;
+	uint32_t					sizepart;
 	char						*stringtable;
 	struct mach_header_64		*header;
 	struct mach_header			*header32;

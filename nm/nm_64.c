@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 13:43:28 by droly             #+#    #+#             */
-/*   Updated: 2018/03/12 16:18:29 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/14 10:29:15 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int		handle_64s3(struct s_stru *stru, char *ptr)
 
 	tmp  = ptr;
 	tmp = ptr + stru->sec->offset + 1;
-	printf("lol\n");
-	printf("mdr : %s, hexa octet : %x\n", stru->sec->sectname, (int)*tmp);
+//	printf("lol\n");
+//	printf("mdr : %s, hexa octet : %x\n", stru->sec->sectname, (int)*tmp);
 	stru->secname[stru->i[1]] = stru->sec->sectname;
 	stru->sec = (struct section_64 *)(((void*)stru->sec) + \
 		sizeof(struct section_64));
@@ -38,7 +38,7 @@ int		handle_64s2(struct s_stru *stru, struct segment_command_64 *seg,
 {
 	if (stru->lc->cmd == LC_SEGMENT_64)
 	{
-		ft_printf("nik\n");
+//		ft_printf("nik\n");
 		seg = (struct segment_command_64*)stru->lc;
 		nsects += seg->nsects;
 	}
@@ -110,7 +110,7 @@ void	handle_64(char *ptr, struct s_stru *stru)
 	int	nsects;
 
 	nsects = initstru(stru);
-	printf("nb lc : %d\n", stru->header->ncmds);
+//	printf("nb lc : %d\n", stru->header->ncmds);
 	while (stru->i[0] < stru->header->ncmds)
 	{
 		nsects = handle_64s2(stru, stru->seg, nsects, ptr);
