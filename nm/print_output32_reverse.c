@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_output32.c                                   :+:      :+:    :+:   */
+/*   print_output32_reverse.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/14 14:58:13 by droly             #+#    #+#             */
-/*   Updated: 2018/03/15 15:16:11 by droly            ###   ########.fr       */
+/*   Created: 2018/03/15 15:16:21 by droly             #+#    #+#             */
+/*   Updated: 2018/03/15 17:10:26 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 
-static int						compare(void const *a, void const *b)
+static int						compare_reverse(void const *a, void const *b)
 {
 	t_nm const					*pa = a;
 	t_nm const					*pb = b;
@@ -37,40 +37,40 @@ static int						compare(void const *a, void const *b)
 	return (ret);
 }
 
-char							print_output432(struct nlist *array, \
+char							print_output432_reverse(struct nlist *array, \
 		int i, char ret)
 {
-	if (array[i].n_value)
+	if (reversebytes32(array[i].n_value))
 		ret = 'C';
 	else
 		ret = 'U';
 	return (ret);
 }
 
-char							print_output232(char *ptr, struct nlist *array,
+char							print_output232_reverse(char *ptr, struct nlist *array,
 		int i, struct s_stru *stru)
 {
 	char						ret;
 
 	ret = '?';
 //	printf("sexname4 : %s, array[i].nest - 1 : %d, i[1] = %d\n", stru->secname[26], array[i].n_sect - 1, stru->i[1]);
-	if ((array[i].n_type & N_TYPE) == N_UNDF)
-		ret = print_output432(array, i, ret);
-	else if ((array[i].n_type & N_TYPE) == N_ABS)
+	if ((reversebytes32(array[i].n_type) & N_TYPE) == N_UNDF)
+		ret = print_output432_reverse(array, i, ret);
+	else if ((reversebytes32(array[i].n_type) & N_TYPE) == N_ABS)
 		ret = 'A';
-	else if ((array[i].n_type & N_TYPE) == N_PBUD)
+	else if ((reversebytes32(array[i].n_type) & N_TYPE) == N_PBUD)
 		ret = 'U';
-	else if ((array[i].n_type & N_TYPE) == N_SECT)
-		ret = secto(array[i].n_sect, stru->secname, stru);
-	else if ((array[i].n_type & N_TYPE) == N_INDR)
+	else if ((reversebytes32(array[i].n_type) & N_TYPE) == N_SECT)
+		ret = secto(reversebytes32(array[i].n_sect), stru->secname, stru);
+	else if ((reversebytes32(array[i].n_type) & N_TYPE) == N_INDR)
 		ret = 'I';
-	if ((array[i].n_type & N_STAB) != 0)
+	if ((reversebytes32(array[i].n_type) & N_STAB) != 0)
 		ret = 'Z';
-	if ((array[i].n_type & N_EXT) == 0 && ret != '?')
+	if ((reversebytes32(array[i].n_type) & N_EXT) == 0 && ret != '?')
 		ret += 32;
-	stru->nm[i].name = stru->stringtable + array[i].n_un.n_strx;
+	stru->nm[i].name = stru->stringtable + reversebytes32(array[i].n_un.n_strx);
 	stru->nm[i].type = ret;
-	stru->nm[i].value = array[i].n_value;
+	stru->nm[i].value = reversebytes32(array[i].n_value);
 	if (checkcorrupt(ptr + stru->sizefile, stru->nm[i].name, stru) == 0 || stru->check == 1)
 	{
 		printf("mdreor\n");
@@ -79,7 +79,7 @@ char							print_output232(char *ptr, struct nlist *array,
 	return (ret);
 }
 
-void							print_output332(struct s_stru *stru, int i)
+void							print_output332_reverse(struct s_stru *stru, int i)
 {
 	if (stru->nm[i].type != 'u' && stru->nm[i].type != 'U' &&
 	stru->nm[i].type != 'z' && stru->nm[i].type != 'Z')
@@ -90,7 +90,7 @@ void							print_output332(struct s_stru *stru, int i)
 				stru->nm[i].name);
 }
 
-void							print_output32(struct s_stru *stru, \
+void							print_output32_reverse(struct s_stru *stru, \
 		char *ptr)
 {
 	unsigned int				i;
@@ -100,26 +100,26 @@ void							print_output32(struct s_stru *stru, \
 
 	seg = (struct segment_command*)stru->lc;
 	stru->sec32 = (struct section*)(seg + sizeof(seg) / sizeof(void*));
-	array = (void *)ptr + stru->sym->symoff;
-	stru->stringtable = (void *)ptr + stru->sym->stroff;
+	array = (void *)ptr + reversebytes32(stru->sym->symoff);
+	stru->stringtable = (void *)ptr + reversebytes32(stru->sym->stroff);
 	i = -1;
-	stru->nm = (t_nm*)malloc(sizeof(t_nm) * stru->sym->nsyms);
+	stru->nm = (t_nm*)malloc(sizeof(t_nm) * reversebytes32(stru->sym->nsyms));
 	if (checkcorrupt(ptr + stru->sizefile, stru->sec32, stru) == 0 || \
 	checkcorrupt(ptr + stru->sizefile, array, stru) == 0 || checkcorrupt(ptr + \
 	stru->sizefile, stru->stringtable, stru) == 0)
 	{
-		printf("wsherror\n");
+//		printf("wsherror\n");
 		return ;
 	}
-	while (++i < stru->sym->nsyms)
+	while (++i < reversebytes32(stru->sym->nsyms))
 	{
 //		printf("sexname3 : %s\n", stru->secname[26]);
-		ret = print_output232(ptr, array, i, stru);
+		ret = print_output232_reverse(ptr, array, i, stru);
 		if (stru->check == 1)
 			return ;
 	}
-	ft_qsort(stru->nm, stru->sym->nsyms, sizeof(t_nm), compare);
+	ft_qsort(stru->nm, reversebytes32(stru->sym->nsyms), sizeof(t_nm), compare_reverse);
 	i = -1;
-	while (++i < stru->sym->nsyms)
-		print_output332(stru, i);
+	while (++i < reversebytes32(stru->sym->nsyms))
+		print_output332_reverse(stru, i);
 }

@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/03/14 12:03:09 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/15 15:17:27 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void							handle_32(char *ptr, struct s_stru *stru);
 int								exitstr(char *str, int error);
 void							print_output(struct s_stru *stru, char *ptr);
 void							print_output32(struct s_stru *stru, char *ptr);
+void							print_output32_reverse(struct s_stru *stru, char *ptr);
 uint64_t	reversebytes64(uint64_t nb);
 uint32_t	reversebytes32(uint32_t nb);
 void	handle_32_reverse(char *ptr, struct s_stru *stru);

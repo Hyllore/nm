@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/03/14 16:59:24 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/15 17:03:33 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char				secto(unsigned int n_sect, char **secname, struct s_stru *stru)
 //	printf("sexname : %s\n", secname[26]);
 	if (n_sect - 1 > stru->i[1] - 1)
 	{
-		printf("corruptmdr\n");
+//		printf("corruptmdr\n");
 		stru->check = 1;
 		return (0);
 	}
@@ -42,7 +42,7 @@ int					checkcorrupt(char *tmp, void *ptr, struct s_stru *stru)
 	return (1);
 }
 
-int					nm(char *ptr, off_t sizefile, char *name)
+int					nm(char *ptr, off_t sizefile, char *name, int count)
 {
 	int				magic_number;
 	struct s_stru	*stru;
@@ -54,6 +54,7 @@ int					nm(char *ptr, off_t sizefile, char *name)
 	struct ranlib	*ran;
 	struct ar_hdr	*ar;
 	char			**info;
+	int				checkmult;
 //	uint32_t		magic;
 
 	nbarch = 1;
@@ -64,6 +65,7 @@ int					nm(char *ptr, off_t sizefile, char *name)
 	stru->sizefile = sizefile;
 	magic_number = *(int *)ptr;
 	tmpptr = ptr;
+	checkmult = 0;
 //	printf("heymdr\n");
 	if ((unsigned int)magic_number == FAT_CIGAM)
 	{
@@ -82,7 +84,10 @@ int					nm(char *ptr, off_t sizefile, char *name)
 		}
 	}
 	if (i >= nbarch)
+	{
 		i = 0;
+		checkmult = 1;
+	}
 //	printf("nb arch %d, magic_number : %x\n", nbarch, magic_number);
 	while (i < nbarch)
 	{
@@ -92,6 +97,14 @@ int					nm(char *ptr, off_t sizefile, char *name)
 		{
 			stru->fat_header = (struct fat_header *)ptr;
 			stru->fat_arch = ((void*)tmpptr + sizeof(struct fat_header) + (sizeof(struct fat_arch) * i));
+			if (checkmult == 1)
+			{
+				ft_printf("\n%s (for architecture ", name);
+				if (reversebytes32(stru->fat_arch->cputype) == CPU_TYPE_POWERPC)
+					ft_printf("ppc):\n");
+				if (reversebytes32(stru->fat_arch->cputype) == CPU_TYPE_I386)
+					ft_printf("i386):\n");
+			}
 			stru->sizepart = reversebytes32(stru->fat_arch->size);
 			if ((unsigned int)magic_number == FAT_CIGAM)
 				offset = reversebytes32(stru->fat_arch->offset);
@@ -103,6 +116,8 @@ int					nm(char *ptr, off_t sizefile, char *name)
 			magic_number = *(int *)(tmpptr + offset);
 			ptr = tmpptr + offset;
 		}
+		if (count > 2 && (unsigned int)magic_number != 0x72613c21)
+			ft_printf("\n%s:\n", name);
 		if ((unsigned int)magic_number == MH_MAGIC_64)
 		{
 //			printf("magic64\n");
@@ -136,12 +151,16 @@ int					nm(char *ptr, off_t sizefile, char *name)
 //a editer
 		if ((unsigned int)magic_number == MH_CIGAM)
 		{
-			ft_printf("cigam32\n");
+//			ft_printf("cigam32\n");
 			stru->header32 = (struct mach_header *)ptr;
 			stru->lc = (void *)ptr + sizeof(*stru->header32);
 			stru->seg32 = (struct segment_command*)stru->lc;
 			if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
+			{
+				ft_printf("eror c con\n");
 				return (0);
+			}
+			handle_32_reverse(ptr, stru);
 		}
 		if ((unsigned int)magic_number == 0x72613c21)
 		{
@@ -164,7 +183,7 @@ int					nm(char *ptr, off_t sizefile, char *name)
 				ft_printf("\n%s(%s):\n", name, ft_strsub(info[6], 2, ft_strlen(info[6])));
 //				ft_printf("size : %d\n", ft_atoi(ft_strsub(ar->ar_name, 3, ft_strlen(ar->ar_name))));
 //				ft_printf("size struct : %d size fmag : %d\n", sizeof(struct ar_hdr), sizeof(ar->ar_fmag));
-				nm((void*)ar + sizeof(struct ar_hdr) + ft_atoi(ft_strsub(ar->ar_name, 3, ft_strlen(ar->ar_name))), ft_atoi(info[5]), name);
+				nm((void*)ar + sizeof(struct ar_hdr) + ft_atoi(ft_strsub(ar->ar_name, 3, ft_strlen(ar->ar_name))), ft_atoi(info[5]), name, 1);
 //				printf("resaluit\n");
 				if (checkcorrupt(ptr + stru->sizefile, (void*)ar + sizeof(struct ar_hdr) + ft_atoi(info[5]), stru) != 0)
 					ar = (void*)ar + sizeof(struct ar_hdr) + ft_atoi(info[5]);
@@ -225,15 +244,11 @@ int					main(int ac, char **av)
 		if (fd > -2 && (ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == \
 				MAP_FAILED)
 			return (exitstr("Error fstat\n", 2));
-		if (fd > -2 && ac > 2)
-			ft_printf("\n%s:\n", av[i]);
-		if (fd > -2 && nm(ptr, buf.st_size, av[i]) == 0)
+		if (fd > -2 && nm(ptr, buf.st_size, av[i], ac) == 0)
 			return (exitstr("Error file corrupted\n", 2));
 		if (fd > -2 && munmap(ptr, buf.st_size) < 0)
 			return (exitstr("Error munmap\n", 2));
-		i++;
 		if (ac == 1)
 			ac++;
 	}
-	return (1);
 }
