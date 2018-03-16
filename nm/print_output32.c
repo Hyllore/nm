@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 14:58:13 by droly             #+#    #+#             */
-/*   Updated: 2018/03/15 15:16:11 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/16 17:15:13 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char							print_output232(char *ptr, struct nlist *array,
 	stru->nm[i].name = stru->stringtable + array[i].n_un.n_strx;
 	stru->nm[i].type = ret;
 	stru->nm[i].value = array[i].n_value;
-	if (checkcorrupt(ptr + stru->sizefile, stru->nm[i].name, stru) == 0 || stru->check == 1)
+	if (checkcorrupt(ptr + stru->sizefile, stru->nm[i].name, stru) == 0 || stru->check[0] == 1)
 	{
 		printf("mdreor\n");
 		return (0);
@@ -115,7 +115,7 @@ void							print_output32(struct s_stru *stru, \
 	{
 //		printf("sexname3 : %s\n", stru->secname[26]);
 		ret = print_output232(ptr, array, i, stru);
-		if (stru->check == 1)
+		if (stru->check[0] == 1)
 			return ;
 	}
 	ft_qsort(stru->nm, stru->sym->nsyms, sizeof(t_nm), compare);

@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/22 15:29:39 by droly             #+#    #+#             */
-/*   Updated: 2018/03/15 15:52:08 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/16 17:16:45 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void	handle_32_reverse(char *ptr, struct s_stru *stru)
 	{
 //		printf("ay2\n");
 		nsects = handle_32s2_reverse(stru, stru->seg32, nsects, ptr);
-		if (stru->check == 1)
+		if (stru->check[0] == 1)
 			return ;
 	}
 	stru->i[0] = 0;
@@ -148,10 +148,10 @@ void	handle_32_reverse(char *ptr, struct s_stru *stru)
 //		printf("ay5\n");
 		if (handle_32s_reverse(stru, stru->seg32, ptr) == 0)
 			break ;
-		if (stru->check == 1)
+		if (stru->check[0] == 1)
 			return ;
 	}
 //	printf("ay6\n");
 	if (stru->check2 == 1)
-		stru->check = 1;
+		stru->check[0] = 1;
 }

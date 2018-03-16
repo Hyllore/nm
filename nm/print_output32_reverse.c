@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/15 15:16:21 by droly             #+#    #+#             */
-/*   Updated: 2018/03/15 17:10:26 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/16 17:15:27 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int						compare_reverse(void const *a, void const *b)
 char							print_output432_reverse(struct nlist *array, \
 		int i, char ret)
 {
-	if (reversebytes32(array[i].n_value))
+	if (array[i].n_value)
 		ret = 'C';
 	else
 		ret = 'U';
@@ -54,24 +54,24 @@ char							print_output232_reverse(char *ptr, struct nlist *array,
 
 	ret = '?';
 //	printf("sexname4 : %s, array[i].nest - 1 : %d, i[1] = %d\n", stru->secname[26], array[i].n_sect - 1, stru->i[1]);
-	if ((reversebytes32(array[i].n_type) & N_TYPE) == N_UNDF)
+	if ((array[i].n_type & N_TYPE) == N_UNDF)
 		ret = print_output432_reverse(array, i, ret);
-	else if ((reversebytes32(array[i].n_type) & N_TYPE) == N_ABS)
+	else if ((array[i].n_type & N_TYPE) == N_ABS)
 		ret = 'A';
-	else if ((reversebytes32(array[i].n_type) & N_TYPE) == N_PBUD)
+	else if ((array[i].n_type & N_TYPE) == N_PBUD)
 		ret = 'U';
-	else if ((reversebytes32(array[i].n_type) & N_TYPE) == N_SECT)
-		ret = secto(reversebytes32(array[i].n_sect), stru->secname, stru);
-	else if ((reversebytes32(array[i].n_type) & N_TYPE) == N_INDR)
+	else if ((array[i].n_type & N_TYPE) == N_SECT)
+		ret = secto(array[i].n_sect, stru->secname, stru);
+	else if ((array[i].n_type & N_TYPE) == N_INDR)
 		ret = 'I';
-	if ((reversebytes32(array[i].n_type) & N_STAB) != 0)
+	if ((array[i].n_type & N_STAB) != 0)
 		ret = 'Z';
-	if ((reversebytes32(array[i].n_type) & N_EXT) == 0 && ret != '?')
+	if ((array[i].n_type & N_EXT) == 0 && ret != '?')
 		ret += 32;
 	stru->nm[i].name = stru->stringtable + reversebytes32(array[i].n_un.n_strx);
 	stru->nm[i].type = ret;
 	stru->nm[i].value = reversebytes32(array[i].n_value);
-	if (checkcorrupt(ptr + stru->sizefile, stru->nm[i].name, stru) == 0 || stru->check == 1)
+	if (checkcorrupt(ptr + stru->sizefile, stru->nm[i].name, stru) == 0 || stru->check[0] == 1)
 	{
 		printf("mdreor\n");
 		return (0);
@@ -115,7 +115,7 @@ void							print_output32_reverse(struct s_stru *stru, \
 	{
 //		printf("sexname3 : %s\n", stru->secname[26]);
 		ret = print_output232_reverse(ptr, array, i, stru);
-		if (stru->check == 1)
+		if (stru->check[0] == 1)
 			return ;
 	}
 	ft_qsort(stru->nm, reversebytes32(stru->sym->nsyms), sizeof(t_nm), compare_reverse);

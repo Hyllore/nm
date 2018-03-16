@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 12:18:52 by droly             #+#    #+#             */
-/*   Updated: 2018/02/16 15:39:39 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/16 17:15:43 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char							print_output2(char *ptr, struct nlist_64 *array,
 	stru->nm[i].name = stru->stringtable + array[i].n_un.n_strx;
 	stru->nm[i].type = ret;
 	stru->nm[i].value = array[i].n_value;
-	if (checkcorrupt(ptr + stru->sizefile, stru->nm[i].name, stru) == 0 || stru->check == 1)
+	if (checkcorrupt(ptr + stru->sizefile, stru->nm[i].name, stru) == 0 || stru->check[0] == 1)
 		return (0);
 	return (ret);
 }
@@ -107,7 +107,7 @@ void							print_output(struct s_stru *stru, \
 	while (++i < stru->sym->nsyms)
 	{
 		ret = print_output2(ptr, array, i, stru);
-		if (stru->check == 1)
+		if (stru->check[0] == 1)
 			return ;
 	}
 	ft_qsort(stru->nm, stru->sym->nsyms, sizeof(t_nm), compare);

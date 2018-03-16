@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 13:43:28 by droly             #+#    #+#             */
-/*   Updated: 2018/03/14 10:29:15 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/16 17:16:25 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	handle_64(char *ptr, struct s_stru *stru)
 	while (stru->i[0] < stru->header->ncmds)
 	{
 		nsects = handle_64s2(stru, stru->seg, nsects, ptr);
-		if (stru->check == 1)
+		if (stru->check[0] == 1)
 			return ;
 	}
 	stru->i[0] = 0;
@@ -131,9 +131,9 @@ void	handle_64(char *ptr, struct s_stru *stru)
 	{
 		if (handle_64s(stru, stru->seg, ptr) == 0)
 			break ;
-		if (stru->check == 1)
+		if (stru->check[0] == 1)
 			return ;
 	}
 	if (stru->check2 == 1)
-		stru->check = 1;
+		stru->check[0] = 1;
 }

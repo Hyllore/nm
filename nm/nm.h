@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/03/15 15:17:27 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/16 17:13:21 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,15 @@
 # include <ar.h>
 # include <mach-o/ranlib.h>
 
-#define SWAP4BYTES(val) \
-( (((val) >> 24) & 0x000000FF) | (((val) >>  8) & 0x0000FF00) | \
-  (((val) <<  8) & 0x00FF0000) | (((val) << 24) & 0xFF000000) )
-
-#define SWAP8BYTES(val) \
-((((val) >> 56) & 0x00000000000000FF) | (((val) >> 40) & 0x000000000000FF00) | \
-(((val) >> 24) & 0x0000000000FF0000) | (((val) >>  8) & 0x00000000FF000000) | \
-(((val) <<  8) & 0x000000FF00000000) | (((val) << 24) & 0x0000FF0000000000) | \
-(((val) << 40) & 0x00FF000000000000) | (((val) << 56) & 0xFF00000000000000))
-
 typedef struct					s_stru
 {
 	struct symtab_command		*sym;
 	struct section_64			*sec;
 	struct section				*sec32;
-	unsigned int				i[3];
+	unsigned int				i[5];
+	struct ar_hdr				*ar;
+	char						**info;
+	int							nbarch;
 	struct load_command			*lc;
 	char						**secname;
 	struct s_nm					*nm;
@@ -53,7 +46,7 @@ typedef struct					s_stru
 	struct fat_arch				*fat_arch;
 	struct segment_command_64	*seg;
 	struct segment_command		*seg32;
-	int							check;
+	int							check[2];
 	int							check2;
 	int							obj;
 }								t_stru;
