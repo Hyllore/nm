@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/03/16 17:13:21 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/20 17:07:08 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@ typedef struct					s_stru
 {
 	struct symtab_command		*sym;
 	struct section_64			*sec;
+	uint32_t					offset;
+	void						*tmpptr;
+	int							magic_number;
 	struct section				*sec32;
 	unsigned int				i[5];
 	struct ar_hdr				*ar;
@@ -72,5 +75,13 @@ uint64_t	reversebytes64(uint64_t nb);
 uint32_t	reversebytes32(uint32_t nb);
 void	handle_32_reverse(char *ptr, struct s_stru *stru);
 void	handle_64_reverse(char *ptr, struct s_stru *stru);
+int		nm6(struct s_stru *stru, void *ptr, char *name);
+void	struinit(struct s_stru *stru, int sizefile, void *ptr);
+int		nm(char *ptr, off_t sizefile, char *name, int count);
+void	nm2(struct s_stru *stru, void *ptr, int sizefile);
+char	*nm3(struct s_stru *stru, void *ptr, char *name);
+int		nm4(struct s_stru *stru, void *ptr, int count, char *name);
+int		nm5(struct s_stru *stru, void *ptr);
+int		nm6(struct s_stru *stru, void *ptr, char *name);
 
 #endif

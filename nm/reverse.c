@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/19 10:14:34 by droly             #+#    #+#             */
-/*   Updated: 2018/02/22 15:03:38 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/20 17:04:17 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,15 @@ uint64_t reversebytes64(uint64_t nb)
 			(nb & 0x00FF000000000000) >> 40 |
 			(nb & 0xFF00000000000000) >> 56);
 	return (nb);
+}
+
+void				struinit(struct s_stru *stru, int sizefile, void *ptr)
+{
+	stru->nbarch = 1;
+	stru->i[3] = 0;
+	stru->check[0] = 0;
+	stru->sizefile = sizefile;
+	stru->magic_number = *(int *)ptr;
+	stru->tmpptr = ptr;
+	stru->check[1] = 0;
 }
