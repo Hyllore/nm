@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/24 15:09:59 by droly             #+#    #+#             */
-/*   Updated: 2018/02/14 13:23:13 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/21 14:59:56 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ typedef struct		s_printf
 	int				tmp;
 }					t_printf;
 
-void		ft_qsort(void *base, size_t nmemb, size_t size,
+void				ft_qsort(void *base, size_t nmemb, size_t size,
 		int (*compar)(const void *, const void *));
 int					ft_printf(const char *format, ...);
 t_printf			seek_len_modif_types(t_printf *lst, const char *format,
@@ -65,7 +65,7 @@ t_printf			apply_flags(t_printf *lst, t_flags *lst2, va_list argptr,
 char				*put_in_maj(char *str);
 char				*take_type1(t_printf *lst, t_flags *lst2, char *str,
 			va_list argptr);
-char			*take_type2(t_printf *lst, char *str, va_list argptr);
+char				*take_type2(t_printf *lst, char *str, va_list argptr);
 char				*apply_diese(t_printf *lst, char *str);
 char				*apply_space(char *str);
 char				*apply_plus(char *str);

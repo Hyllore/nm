@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nm+.c                                              :+:      :+:    :+:   */
+/*   nm2.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/20 16:58:57 by droly             #+#    #+#             */
-/*   Updated: 2018/03/20 17:07:12 by droly            ###   ########.fr       */
+/*   Created: 2018/03/21 11:39:21 by droly             #+#    #+#             */
+/*   Updated: 2018/03/21 11:41:19 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 
-void				nm2(struct s_stru *stru, void *ptr, int sizefile)
+void	nm2(struct s_stru *stru, void *ptr, int sizefile)
 {
 	struinit(stru, sizefile, ptr);
 	if ((unsigned int)stru->magic_number == FAT_CIGAM)
@@ -26,7 +26,7 @@ void				nm2(struct s_stru *stru, void *ptr, int sizefile)
 			if (reversebytes32(stru->fat_arch->cputype) == CPU_TYPE_X86_64)
 			{
 				stru->nbarch = stru->i[3] + 1;
-				break;
+				break ;
 			}
 			stru->i[3]++;
 		}
@@ -38,7 +38,7 @@ void				nm2(struct s_stru *stru, void *ptr, int sizefile)
 	}
 }
 
-char				*nm3(struct s_stru *stru, void *ptr, char *name)
+char	*nm3(struct s_stru *stru, void *ptr, char *name)
 {
 	stru->magic_number = *(int *)stru->tmpptr;
 	if ((unsigned int)stru->magic_number == FAT_CIGAM ||
@@ -61,12 +61,12 @@ char				*nm3(struct s_stru *stru, void *ptr, char *name)
 		else if ((unsigned int)stru->magic_number == FAT_MAGIC)
 			stru->offset = stru->fat_arch->offset;
 		stru->magic_number = *(int *)(stru->tmpptr + stru->offset);
-		ptr = stru->tmpptr +stru->offset;
+		ptr = stru->tmpptr + stru->offset;
 	}
 	return (ptr);
 }
 
-int				nm4(struct s_stru *stru, void *ptr, int count, char *name)
+int		nm4(struct s_stru *stru, void *ptr, int count, char *name)
 {
 	if (count > 2 && (unsigned int)stru->magic_number != 0x72613c21 &&
 	((unsigned int)stru->magic_number == MH_CIGAM_64 ||
@@ -95,7 +95,7 @@ int				nm4(struct s_stru *stru, void *ptr, int count, char *name)
 	return (1);
 }
 
-int				nm5(struct s_stru *stru, void *ptr)
+int		nm5(struct s_stru *stru, void *ptr)
 {
 	if ((unsigned int)stru->magic_number == MH_MAGIC)
 	{
@@ -118,7 +118,7 @@ int				nm5(struct s_stru *stru, void *ptr)
 	return (1);
 }
 
-int				nm6(struct s_stru *stru, void *ptr, char *name)
+int		nm6(struct s_stru *stru, void *ptr, char *name)
 {
 	stru->info = ft_strsplit(ptr + SARMAG, ' ');
 	stru->ar = (void*)ptr + SARMAG + sizeof(struct ar_hdr) +
@@ -129,12 +129,12 @@ int				nm6(struct s_stru *stru, void *ptr, char *name)
 		stru->sizefile = stru->sizepart;
 	}
 	while (checkcorrupt(ptr + stru->sizefile, (void*)stru->ar +
-		sizeof(struct ar_hdr) + ft_atoi(stru->info[5]) -1, stru) != 0)
+		sizeof(struct ar_hdr) + ft_atoi(stru->info[5]) - 1, stru) != 0)
 	{
 		ft_printf("\n%s(%s):\n", name, ft_strsub(stru->info[6], 2,
 					ft_strlen(stru->info[6])));
 		nm((void*)stru->ar + sizeof(struct ar_hdr) +
-	ft_atoi(ft_strsub(stru->ar->ar_name, 3, ft_strlen(stru->ar->ar_name))), 
+	ft_atoi(ft_strsub(stru->ar->ar_name, 3, ft_strlen(stru->ar->ar_name))),
 	ft_atoi(stru->info[5]), name, 1);
 		if (checkcorrupt(ptr + stru->sizefile, (void*)stru->ar +
 			sizeof(struct ar_hdr) + ft_atoi(stru->info[5]), stru) != 0)

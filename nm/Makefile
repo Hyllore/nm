@@ -6,11 +6,11 @@
 #    By: droly <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/27 15:32:49 by droly             #+#    #+#              #
-#    Updated: 2018/03/20 17:13:53 by droly            ###   ########.fr        #
+#    Updated: 2018/03/21 13:31:34 by droly            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = nm
+NAME = ft_nm
 
 SRC = nm.c \
 	  nm_64.c \
@@ -22,7 +22,7 @@ SRC = nm.c \
 	  print_output32.c \
 	  print_output32_reverse.c \
 	  reverse.c \
-	  nm+.c
+	  nm2.c
 
 OBJ = $(SRC:.c=.o)
 

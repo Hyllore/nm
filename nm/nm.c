@@ -6,13 +6,14 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:18:12 by droly             #+#    #+#             */
-/*   Updated: 2018/03/20 17:07:15 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/21 10:05:24 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "nm.h"
 
-char				secto(unsigned int n_sect, char **secname, struct s_stru *stru)
+char				secto(unsigned int n_sect, char **secname,
+		struct s_stru *stru)
 {
 	if (n_sect - 1 > stru->i[1] - 1)
 	{
@@ -86,7 +87,7 @@ int					main(int ac, char **av)
 	int				fd;
 	char			*ptr;
 	struct stat		buf;
-	int i;
+	int				i;
 
 	fd = 0;
 	i = 0;
@@ -96,8 +97,8 @@ int					main(int ac, char **av)
 			return (0);
 		if (fstat(fd, &buf) < 0 && fd > -2)
 			return (exitstr("Error fstat\n", 2));
-		if (fd > -2 && (ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == \
-				MAP_FAILED)
+		if (fd > -2 && (ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE,
+						fd, 0)) == MAP_FAILED)
 			return (exitstr("Error fstat\n", 2));
 		if (fd > -2 && nm(ptr, buf.st_size, av[i], ac) == 0)
 			return (exitstr("Error file corrupted\n", 2));

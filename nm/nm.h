@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/03/20 17:07:08 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/21 13:27:46 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ typedef struct					s_nm
 	struct s_nm					*next;
 }								t_nm;
 
-char							secto(unsigned int n_sect, char **secname, struct s_stru *stru);
+char							secto(unsigned int n_sect, char **secname,
+		struct s_stru *stru);
 int								checkcorrupt(char *tmp, void *ptr, \
 		struct s_stru *stru);
 void							handle_64(char *ptr, struct s_stru *stru);
@@ -70,18 +71,28 @@ void							handle_32(char *ptr, struct s_stru *stru);
 int								exitstr(char *str, int error);
 void							print_output(struct s_stru *stru, char *ptr);
 void							print_output32(struct s_stru *stru, char *ptr);
-void							print_output32_reverse(struct s_stru *stru, char *ptr);
-uint64_t	reversebytes64(uint64_t nb);
-uint32_t	reversebytes32(uint32_t nb);
-void	handle_32_reverse(char *ptr, struct s_stru *stru);
-void	handle_64_reverse(char *ptr, struct s_stru *stru);
-int		nm6(struct s_stru *stru, void *ptr, char *name);
-void	struinit(struct s_stru *stru, int sizefile, void *ptr);
-int		nm(char *ptr, off_t sizefile, char *name, int count);
-void	nm2(struct s_stru *stru, void *ptr, int sizefile);
-char	*nm3(struct s_stru *stru, void *ptr, char *name);
-int		nm4(struct s_stru *stru, void *ptr, int count, char *name);
-int		nm5(struct s_stru *stru, void *ptr);
-int		nm6(struct s_stru *stru, void *ptr, char *name);
+void							print_output32_reverse(struct s_stru *stru,
+		char *ptr, uint32_t i);
+uint64_t						reversebytes64(uint64_t nb);
+uint32_t						reversebytes32(uint32_t nb);
+void							handle_32_reverse(char *ptr, struct
+		s_stru *stru);
+void							handle_64_reverse(char *ptr, struct
+		s_stru *stru);
+int								nm6(struct s_stru *stru, void *ptr,
+		char *name);
+void							struinit(struct s_stru *stru, int sizefile,
+		void *ptr);
+int								nm(char *ptr, off_t sizefile, char *name,
+		int count);
+void							nm2(struct s_stru *stru, void *ptr,
+		int sizefile);
+char							*nm3(struct s_stru *stru, void *ptr,
+		char *name);
+int								nm4(struct s_stru *stru, void *ptr, int
+		count, char *name);
+int								nm5(struct s_stru *stru, void *ptr);
+int								nm6(struct s_stru *stru, void *ptr,
+		char *name);
 
 #endif
