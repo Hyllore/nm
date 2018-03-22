@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nm_64.c                                            :+:      :+:    :+:   */
+/*   otool_64.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/14 13:43:28 by droly             #+#    #+#             */
-/*   Updated: 2018/03/12 17:13:17 by droly            ###   ########.fr       */
+/*   Created: 2018/03/22 16:20:01 by droly             #+#    #+#             */
+/*   Updated: 2018/03/22 17:29:44 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,29 @@
 
 int		handle_64s3(struct s_stru *stru, char *ptr)
 {
-	printf("%s\n", stru->sec->sectname);
+	char *tmp;
+	size_t i;
+
+	i = -1;
+	tmp = ptr;
+	if (ft_strcmp(stru->sec->sectname, "__text") == 0)
+		ft_printf("\nContents of (__TEXT,__text) section");
+	while (++i < stru->sec->size && ft_strcmp(stru->sec->sectname, "__text") == 0)
+	{
+		if (i % 16 == 0)
+		{
+			ft_printf("\n%x\t", (int)(tmp + i + stru->sec->offset));
+		}
+		ft_printf("%02x ", *(unsigned char*)(tmp + i + stru->sec->offset));
+	}
+	if (ft_strcmp(stru->sec->sectname, "__text") == 0)
+		ft_printf("\n");
+	tmp = ptr + stru->sec->offset + 1;
 	stru->secname[stru->i[1]] = stru->sec->sectname;
 	stru->sec = (struct section_64 *)(((void*)stru->sec) + \
-		sizeof(struct section_64));
+			sizeof(struct section_64));
 	if (checkcorrupt(ptr + stru->sizefile, stru->sec, stru) == 0)
-	{
-		ft_printf("corrupt1\n");
 		return (0);
-	}
 	stru->i[1]++;
 	stru->i[2]++;
 	return (1);
@@ -33,16 +47,12 @@ int		handle_64s2(struct s_stru *stru, struct segment_command_64 *seg,
 {
 	if (stru->lc->cmd == LC_SEGMENT_64)
 	{
-		ft_printf("nik\n");
 		seg = (struct segment_command_64*)stru->lc;
 		nsects += seg->nsects;
 	}
 	stru->lc = (void *)stru->lc + stru->lc->cmdsize;
 	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
-	{
-		ft_printf("corrupt2\n");
 		return (nsects);
-	}
 	stru->i[0]++;
 	return (nsects);
 }
@@ -52,14 +62,10 @@ int		handle_64s(struct s_stru *stru, struct \
 {
 	if (stru->lc->cmd == LC_SEGMENT_64)
 	{
-		printf("segment64\n");
 		seg = (struct segment_command_64*)stru->lc;
 		stru->sec = (struct section_64*)(seg + sizeof(seg) / sizeof(void*));
 		if (checkcorrupt(ptr + stru->sizefile, stru->sec, stru) == 0)
-		{
-			ft_printf("corrupt3\n");
 			return (0);
-		}
 		while (stru->i[2] < seg->nsects)
 		{
 			if (handle_64s3(stru, ptr) == 0)
@@ -69,18 +75,14 @@ int		handle_64s(struct s_stru *stru, struct \
 	}
 	if (stru->lc->cmd == LC_SYMTAB)
 	{
-		printf("symtab\n");
 		stru->check2 = 0;
 		stru->sym = (struct symtab_command *)stru->lc;
-		print_output(stru, ptr);
+//		print_output(stru, ptr);
 		return (0);
 	}
 	stru->lc = (void *)stru->lc + stru->lc->cmdsize;
 	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
-	{
-		ft_printf("corrupt4\n");
 		return (0);
-	}
 	stru->i[0]++;
 	return (1);
 }
@@ -95,7 +97,8 @@ int		initstru(struct s_stru *stru)
 	stru->check2 = 1;
 	nsects = stru->seg->nsects;
 	stru->i[2] = nsects;
-	if (stru->header->filetype == MH_OBJECT || stru->header->filetype == MH_DYLIB)
+	if (stru->header->filetype == MH_OBJECT || stru->header->filetype ==
+			MH_DYLIB)
 		stru->obj = 0;
 	else
 		stru->obj = 1;
@@ -107,30 +110,26 @@ void	handle_64(char *ptr, struct s_stru *stru)
 	int	nsects;
 
 	nsects = initstru(stru);
-	printf("nb lc : %d\n", stru->header->ncmds);
 	while (stru->i[0] < stru->header->ncmds)
 	{
 		nsects = handle_64s2(stru, stru->seg, nsects, ptr);
-		if (stru->check == 1)
+		if (stru->check[0] == 1)
 			return ;
 	}
 	stru->i[0] = 0;
 	stru->i[2] = 0;
 	stru->lc = (void *)ptr + sizeof(*stru->header);
 	if (checkcorrupt(ptr + stru->sizefile, stru->lc, stru) == 0)
-	{
-		ft_printf("corrupt5\n");
 		return ;
-	}
 	stru->secname = (char **)malloc(sizeof(char*) * nsects);
 	stru->seg = (struct segment_command_64*)stru->lc;
 	while (stru->i[0] < stru->header->ncmds)
 	{
 		if (handle_64s(stru, stru->seg, ptr) == 0)
 			break ;
-		if (stru->check == 1)
+		if (stru->check[0] == 1)
 			return ;
 	}
 	if (stru->check2 == 1)
-		stru->check = 1;
+		stru->check[0] = 1;
 }

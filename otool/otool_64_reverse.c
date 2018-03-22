@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nm_64_reverse.c                                    :+:      :+:    :+:   */
+/*   otool_64_reverse.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/22 15:29:26 by droly             #+#    #+#             */
-/*   Updated: 2018/03/12 11:25:52 by droly            ###   ########.fr       */
+/*   Created: 2018/03/22 16:20:20 by droly             #+#    #+#             */
+/*   Updated: 2018/03/22 16:20:28 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	handle_64_reverse(char *ptr, struct s_stru *stru)
 	while (stru->i[0] < stru->header->ncmds)
 	{
 		nsects = handle_64s2_reverse(stru, stru->seg, nsects, ptr);
-		if (stru->check == 1)
+		if (stru->check[0] == 1)
 			return ;
 	}
 	stru->i[0] = 0;
@@ -109,9 +109,9 @@ void	handle_64_reverse(char *ptr, struct s_stru *stru)
 	{
 		if (handle_64s_reverse(stru, stru->seg, ptr) == 0)
 			break ;
-		if (stru->check == 1)
+		if (stru->check[0] == 1)
 			return ;
 	}
 	if (stru->check2 == 1)
-		stru->check = 1;
+		stru->check[0] = 1;
 }

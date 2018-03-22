@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   otool.h                                            :+:      :+:    :+:   */
+/*   nm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/09 16:44:15 by droly             #+#    #+#             */
-/*   Updated: 2018/03/12 11:25:27 by droly            ###   ########.fr       */
+/*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
+/*   Updated: 2018/03/22 16:41:10 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef OTOOL_H
-# define OTOOL_H
+#ifndef NM_H
+# define NM_H
 
 # include <stdio.h>
 # include <sys/mman.h>
@@ -25,26 +25,23 @@
 # include <ar.h>
 # include <mach-o/ranlib.h>
 
-#define SWAP4BYTES(val) \
-( (((val) >> 24) & 0x000000FF) | (((val) >>  8) & 0x0000FF00) | \
-  (((val) <<  8) & 0x00FF0000) | (((val) << 24) & 0xFF000000) )
-
-#define SWAP8BYTES(val) \
-((((val) >> 56) & 0x00000000000000FF) | (((val) >> 40) & 0x000000000000FF00) | \
-(((val) >> 24) & 0x0000000000FF0000) | (((val) >>  8) & 0x00000000FF000000) | \
-(((val) <<  8) & 0x000000FF00000000) | (((val) << 24) & 0x0000FF0000000000) | \
-(((val) << 40) & 0x00FF000000000000) | (((val) << 56) & 0xFF00000000000000))
-
 typedef struct					s_stru
 {
 	struct symtab_command		*sym;
 	struct section_64			*sec;
+	uint32_t					offset;
+	void						*tmpptr;
+	int							magic_number;
 	struct section				*sec32;
-	unsigned int				i[3];
+	unsigned int				i[5];
+	struct ar_hdr				*ar;
+	char						**info;
+	int							nbarch;
 	struct load_command			*lc;
 	char						**secname;
 	struct s_nm					*nm;
 	off_t						sizefile;
+	uint32_t					sizepart;
 	char						*stringtable;
 	struct mach_header_64		*header;
 	struct mach_header			*header32;
@@ -52,7 +49,7 @@ typedef struct					s_stru
 	struct fat_arch				*fat_arch;
 	struct segment_command_64	*seg;
 	struct segment_command		*seg32;
-	int							check;
+	int							check[2];
 	int							check2;
 	int							obj;
 }								t_stru;
@@ -65,7 +62,8 @@ typedef struct					s_nm
 	struct s_nm					*next;
 }								t_nm;
 
-char							secto(unsigned int n_sect, char **secname, struct s_stru *stru);
+char							secto(unsigned int n_sect, char **secname,
+		struct s_stru *stru);
 int								checkcorrupt(char *tmp, void *ptr, \
 		struct s_stru *stru);
 void							handle_64(char *ptr, struct s_stru *stru);
@@ -73,9 +71,26 @@ void							handle_32(char *ptr, struct s_stru *stru);
 int								exitstr(char *str, int error);
 void							print_output(struct s_stru *stru, char *ptr);
 void							print_output32(struct s_stru *stru, char *ptr);
-uint64_t	reversebytes64(uint64_t nb);
-uint32_t	reversebytes32(uint32_t nb);
-void	handle_32_reverse(char *ptr, struct s_stru *stru);
-void	handle_64_reverse(char *ptr, struct s_stru *stru);
+void							print_output32_reverse(struct s_stru *stru,
+		char *ptr, uint32_t i);
+uint64_t						reversebytes64(uint64_t nb);
+uint32_t						reversebytes32(uint32_t nb);
+void							handle_32_reverse(char *ptr, struct
+		s_stru *stru);
+void							handle_64_reverse(char *ptr, struct
+		s_stru *stru);
+int								nm6(struct s_stru *stru, void *ptr,
+		char *name);
+void							struinit(struct s_stru *stru, int sizefile,
+		void *ptr);
+int								nm(char *ptr, off_t sizefile, char *name);
+void							nm2(struct s_stru *stru, void *ptr,
+		int sizefile);
+char							*nm3(struct s_stru *stru, void *ptr,
+		char *name);
+int								nm4(struct s_stru *stru, void *ptr, char *name);
+int								nm5(struct s_stru *stru, void *ptr);
+int								nm6(struct s_stru *stru, void *ptr,
+		char *name);
 
 #endif

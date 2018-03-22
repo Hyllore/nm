@@ -6,21 +6,23 @@
 #    By: droly <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/27 15:32:49 by droly             #+#    #+#              #
-#    Updated: 2018/03/12 17:06:07 by droly            ###   ########.fr        #
+#    Updated: 2018/03/22 16:22:04 by droly            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = otool
+NAME = ft_otool
 
 SRC = otool.c \
-	  error.c \
-	  otool_32.c \
-	  otool_32_reverse.c \
 	  otool_64.c \
 	  otool_64_reverse.c \
 	  print_output.c \
+	  error.c \
+	  otool_32.c \
+	  otool_32_reverse.c \
 	  print_output32.c \
+	  print_output32_reverse.c \
 	  reverse.c \
+	  otool2.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -46,7 +48,7 @@ clean:
 	@rm -f $(OBJ)
 
 fclean: clean
-	@echo "✅  \\033[1;31;mDeleting all (otool)...\033[0m"
+	@echo "✅  \\033[1;31;mDeleting all (otool)..\033[0m"
 	@make fclean -C ../libft/
 	@rm -f $(NAME)
 
