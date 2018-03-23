@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/22 16:20:01 by droly             #+#    #+#             */
-/*   Updated: 2018/03/22 17:29:44 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/23 11:05:03 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int		handle_64s3(struct s_stru *stru, char *ptr)
 	{
 		if (i % 16 == 0)
 		{
-			ft_printf("\n%x\t", (int)(tmp + i + stru->sec->offset));
+			ft_printf("\n0000000%d%08x\t", stru->obj, (char)tmp + i + stru->sec->offset);
 		}
 		ft_printf("%02x ", *(unsigned char*)(tmp + i + stru->sec->offset));
 	}

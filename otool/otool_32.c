@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/22 16:19:34 by droly             #+#    #+#             */
-/*   Updated: 2018/03/22 16:19:39 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/23 11:48:29 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,23 @@
 
 int		handle_32s3(struct s_stru *stru, char *ptr)
 {
+	char *tmp;
+	size_t i;
+
+	i = -1;
+	tmp = ptr;
+	if (ft_strcmp(stru->sec->sectname, "__text") == 0)
+		ft_printf("\nContents of (__TEXT,__text) section");
+	while (++i < stru->sec->size && ft_strcmp(stru->sec->sectname, "__text") == 0)
+	{
+		if (i % 16 == 0)
+		{
+			ft_printf("\n0000000%d%08x\t", stru->obj, (char)tmp + i + stru->sec->offset);
+		}
+		ft_printf("%02x ", *(unsigned char*)(tmp + i + stru->sec->offset));
+	}
+	if (ft_strcmp(stru->sec->sectname, "__text") == 0)
+		ft_printf("\n");
 	stru->secname[stru->i[1]] = stru->sec32->sectname;
 	stru->sec32 = (struct section *)(((void*)stru->sec32) + \
 		sizeof(struct section));
