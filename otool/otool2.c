@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/22 16:19:15 by droly             #+#    #+#             */
-/*   Updated: 2018/03/22 16:43:39 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/23 17:03:42 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*nm3(struct s_stru *stru, void *ptr, char *name)
 				(sizeof(struct fat_arch) * stru->i[3]));
 		if (stru->check[1] == 1)
 		{
-			ft_printf("\n%s (for architecture ", name);
+			ft_printf("%s (for architecture ", name);
 			if (reversebytes32(stru->fat_arch->cputype) == CPU_TYPE_POWERPC)
 				ft_printf("ppc):\n");
 			if (reversebytes32(stru->fat_arch->cputype) == CPU_TYPE_I386)
@@ -68,7 +68,11 @@ char	*nm3(struct s_stru *stru, void *ptr, char *name)
 
 int		nm4(struct s_stru *stru, void *ptr, char *name)
 {
-	ft_printf("%s:", name);
+	if ((unsigned int)stru->magic_number != 0x72613c21 && ft_strcmp(name,
+				"/NULL/") != 0)
+		ft_printf("%s:", name);
+	else if ((unsigned int)stru->magic_number == 0x72613c21)
+		ft_printf("Archive : %s\n", name);
 	if ((unsigned int)stru->magic_number == MH_MAGIC_64)
 	{
 		stru->header = (struct mach_header_64 *)ptr;
@@ -126,11 +130,11 @@ int		nm6(struct s_stru *stru, void *ptr, char *name)
 	while (checkcorrupt(ptr + stru->sizefile, (void*)stru->ar +
 		sizeof(struct ar_hdr) + ft_atoi(stru->info[5]) - 1, stru) != 0)
 	{
-		ft_printf("\n%s(%s):\n", name, ft_strsub(stru->info[6], 2,
+		ft_printf("%s(%s):", name, ft_strsub(stru->info[6], 2,
 					ft_strlen(stru->info[6])));
 		nm((void*)stru->ar + sizeof(struct ar_hdr) +
 	ft_atoi(ft_strsub(stru->ar->ar_name, 3, ft_strlen(stru->ar->ar_name))),
-	ft_atoi(stru->info[5]), name);
+	ft_atoi(stru->info[5]), "/NULL/");
 		if (checkcorrupt(ptr + stru->sizefile, (void*)stru->ar +
 			sizeof(struct ar_hdr) + ft_atoi(stru->info[5]), stru) != 0)
 			stru->ar = (void*)stru->ar + sizeof(struct ar_hdr) +

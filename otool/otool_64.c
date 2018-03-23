@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/22 16:20:01 by droly             #+#    #+#             */
-/*   Updated: 2018/03/23 11:05:03 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/23 16:03:45 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,22 @@ int		handle_64s3(struct s_stru *stru, char *ptr)
 	tmp = ptr;
 	if (ft_strcmp(stru->sec->sectname, "__text") == 0)
 		ft_printf("\nContents of (__TEXT,__text) section");
-	while (++i < stru->sec->size && ft_strcmp(stru->sec->sectname, "__text") == 0)
+	while (++i < stru->sec->size && ft_strcmp(stru->sec->sectname,
+				"__text") == 0)
 	{
-		if (i % 16 == 0)
-		{
-			ft_printf("\n0000000%d%08x\t", stru->obj, (char)tmp + i + stru->sec->offset);
-		}
+		if (i % 16 == 0 && stru->obj == 0 && stru->header->filetype ==
+			MH_DYLIB)
+			ft_printf("\n0000000%d%08x\t", stru->obj, (char)tmp + i +
+					stru->sec->offset);
+		else if (i % 16 == 0 && stru->obj == 0)
+			ft_printf("\n0000000%d%08x\t", stru->obj, 16 * (i / 16 ));
+		else if (i % 16 == 0 && stru->obj == 1)
+			ft_printf("\n0000000%d%08x\t", stru->obj, (char)tmp + i +
+					stru->sec->offset);
 		ft_printf("%02x ", *(unsigned char*)(tmp + i + stru->sec->offset));
 	}
 	if (ft_strcmp(stru->sec->sectname, "__text") == 0)
 		ft_printf("\n");
-	tmp = ptr + stru->sec->offset + 1;
 	stru->secname[stru->i[1]] = stru->sec->sectname;
 	stru->sec = (struct section_64 *)(((void*)stru->sec) + \
 			sizeof(struct section_64));
@@ -77,7 +82,6 @@ int		handle_64s(struct s_stru *stru, struct \
 	{
 		stru->check2 = 0;
 		stru->sym = (struct symtab_command *)stru->lc;
-//		print_output(stru, ptr);
 		return (0);
 	}
 	stru->lc = (void *)stru->lc + stru->lc->cmdsize;

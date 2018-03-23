@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/03/22 16:41:10 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/23 13:34:29 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,6 @@ int								checkcorrupt(char *tmp, void *ptr, \
 void							handle_64(char *ptr, struct s_stru *stru);
 void							handle_32(char *ptr, struct s_stru *stru);
 int								exitstr(char *str, int error);
-void							print_output(struct s_stru *stru, char *ptr);
-void							print_output32(struct s_stru *stru, char *ptr);
-void							print_output32_reverse(struct s_stru *stru,
-		char *ptr, uint32_t i);
 uint64_t						reversebytes64(uint64_t nb);
 uint32_t						reversebytes32(uint32_t nb);
 void							handle_32_reverse(char *ptr, struct

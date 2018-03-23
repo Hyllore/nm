@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/22 16:19:46 by droly             #+#    #+#             */
-/*   Updated: 2018/03/23 12:07:48 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/23 17:00:18 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,25 @@ int		handle_32s3_reverse(struct s_stru *stru, char *ptr)
 
 	i = -1;
 	tmp = ptr;
-	if (ft_strcmp(stru->sec->sectname, "__text") == 0)
-		ft_printf("\nContents of (__TEXT,__text) section");
-	while (++i < reversebytes32(stru->sec->size) && ft_strcmp(stru->sec->sectname, "__text") == 0)
+	if (ft_strcmp(stru->sec32->sectname, "__text") == 0)
+		ft_printf("\nContents of (__TEXT,__text) section ");
+	while (++i < reversebytes32(stru->sec32->size) &&
+			ft_strcmp(stru->sec32->sectname, "__text") == 0)
 	{
-		if (i % 16 == 0)
-		{
-			ft_printf("\n0000000%d%08x\t", stru->obj, (char)tmp + i + reversebytes32(stru->sec->offset));
-		}
-		ft_printf("%02x ", *(unsigned char*)(tmp + i + reversebytes32(stru->sec->offset)));
+		if (i % 16 == 0 && stru->obj == 0 &&
+				reversebytes32(stru->header32->filetype) == MH_DYLIB)
+			ft_printf("\n%08x\t", ((char)tmp + i +
+					reversebytes32(stru->sec32->offset)) + 4096);
+		else if (i % 16 == 0 && stru->obj == 0)
+			ft_printf("\n%08x\t",16 * (i / 16 ));
+		else if (i % 16 == 0 && stru->obj == 1)
+			ft_printf("\n%08x\t", ((char)tmp + i +
+					reversebytes32(stru->sec32->offset)) + 4096);
+		if (i % 4 == 0)
+			ft_printf(" ");
+		ft_printf("%02x", *(unsigned char*)(tmp + i + reversebytes32(stru->sec32->offset)));
 	}
-	if (ft_strcmp(stru->sec->sectname, "__text") == 0)
+	if (ft_strcmp(stru->sec32->sectname, "__text") == 0)
 		ft_printf("\n");
 	stru->secname[stru->i[1]] = stru->sec32->sectname;
 	stru->sec32 = (struct section *)(((void*)stru->sec32) + \
@@ -76,7 +84,6 @@ int		handle_32s_reverse(struct s_stru *stru, struct \
 	{
 		stru->check2 = 0;
 		stru->sym = (struct symtab_command *)stru->lc;
-		print_output32_reverse(stru, ptr, -1);
 		return (0);
 	}
 	stru->lc = (void *)stru->lc + reversebytes32(stru->lc->cmdsize);
