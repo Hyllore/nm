@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nm.h                                               :+:      :+:    :+:   */
+/*   otool.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/03/26 11:54:19 by droly            ###   ########.fr       */
+/*   Created: 2018/03/26 15:40:28 by droly             #+#    #+#             */
+/*   Updated: 2018/03/26 15:40:43 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef NM_H
-# define NM_H
+#ifndef OTOOL_H
+# define OTOOL_H
 
 # include <stdio.h>
 # include <sys/mman.h>
@@ -88,10 +88,13 @@ int								nm4(struct s_stru *stru, void *ptr, char *name);
 int								nm5(struct s_stru *stru, void *ptr);
 int								nm6(struct s_stru *stru, void *ptr,
 		char *name);
-void		reverse64(struct s_stru *stru, char *ptr, int i);
-void		normal64(struct s_stru *stru, char *ptr, int i);
-void		reverse32(struct s_stru *stru, char *ptr, int i);
-void		normal32(struct s_stru *stru, char *ptr, int i);
-
+void							reverse64(struct s_stru *stru, char *ptr,
+		int i);
+void							normal64(struct s_stru *stru, char *ptr,
+		int i);
+void							reverse32(struct s_stru *stru, char *ptr,
+		int i);
+void							normal32(struct s_stru *stru, char *ptr,
+		int i);
 
 #endif
