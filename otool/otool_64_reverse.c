@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/22 16:20:20 by droly             #+#    #+#             */
-/*   Updated: 2018/03/23 16:10:01 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/26 11:54:53 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,14 @@
 
 int		handle_64s3_reverse(struct s_stru *stru, char *ptr)
 {
-	char *tmp;
 	size_t i;
 
 	i = -1;
-	tmp = ptr;
 	if (ft_strcmp(stru->sec->sectname, "__text") == 0)
 		ft_printf("\nContents of (__TEXT,__text) section");
 	while (++i < reversebytes32(stru->sec->size) &&
 			ft_strcmp(stru->sec->sectname, "__text") == 0)
-	{
-		if (i % 16 == 0 && stru->obj == 0 && stru->header->filetype ==
-			MH_DYLIB)
-			ft_printf("\n0000000%d%08x\t", stru->obj, (char)tmp + i +
-					stru->sec->offset);
-		else if (i % 16 == 0 && stru->obj == 0)
-			ft_printf("\n0000000%d%08x\t", stru->obj, 16 * (i / 16 ));
-		else if (i % 16 == 0 && stru->obj == 1)
-			ft_printf("\n0000000%d%08x\t", stru->obj, (char)tmp + i +
-					stru->sec->offset);
-		ft_printf("%02x ", *(unsigned char*)(tmp + i + stru->sec->offset));
-	}
+		reverse64(stru, ptr, i);
 	if (ft_strcmp(stru->sec->sectname, "__text") == 0)
 		ft_printf("\n");
 	stru->secname[stru->i[1]] = stru->sec->sectname;

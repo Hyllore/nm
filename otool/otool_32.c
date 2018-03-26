@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/22 16:19:34 by droly             #+#    #+#             */
-/*   Updated: 2018/03/23 16:43:16 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/26 11:54:46 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,14 @@
 
 int		handle_32s3(struct s_stru *stru, char *ptr)
 {
-	char *tmp;
 	size_t i;
 
 	i = -1;
-	tmp = ptr;
 	if (ft_strcmp(stru->sec32->sectname, "__text") == 0)
 		ft_printf("\nContents of (__TEXT,__text) section");
 	while (++i < stru->sec32->size && ft_strcmp(stru->sec32->sectname,
 				"__text") == 0)
-	{
-		if (i % 16 == 0 && stru->obj == 0 && stru->header->filetype ==
-			MH_DYLIB)
-			ft_printf("\n%08x\t", ((char)tmp + i +
-					stru->sec32->offset) + 4096);
-		else if (i % 16 == 0 && stru->obj == 0)
-			ft_printf("\n%08x\t",16 * (i / 16 ));
-		else if (i % 16 == 0 && stru->obj == 1)
-			ft_printf("\n%08x\t", ((char)tmp + i +
-					stru->sec32->offset) + 4096);
-		ft_printf("%02x ", *(unsigned char*)(tmp + i + stru->sec32->offset));
-	}
+		normal32(stru, ptr, i);
 	if (ft_strcmp(stru->sec32->sectname, "__text") == 0)
 		ft_printf("\n");
 	stru->secname[stru->i[1]] = stru->sec32->sectname;

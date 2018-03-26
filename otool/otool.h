@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/08 11:12:34 by droly             #+#    #+#             */
-/*   Updated: 2018/03/23 13:34:29 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/26 11:54:19 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,10 @@ int								nm4(struct s_stru *stru, void *ptr, char *name);
 int								nm5(struct s_stru *stru, void *ptr);
 int								nm6(struct s_stru *stru, void *ptr,
 		char *name);
+void		reverse64(struct s_stru *stru, char *ptr, int i);
+void		normal64(struct s_stru *stru, char *ptr, int i);
+void		reverse32(struct s_stru *stru, char *ptr, int i);
+void		normal32(struct s_stru *stru, char *ptr, int i);
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: droly <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/22 16:19:15 by droly             #+#    #+#             */
-/*   Updated: 2018/03/23 17:03:42 by droly            ###   ########.fr       */
+/*   Updated: 2018/03/26 13:04:43 by droly            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ char	*nm3(struct s_stru *stru, void *ptr, char *name)
 				(sizeof(struct fat_arch) * stru->i[3]));
 		if (stru->check[1] == 1)
 		{
-			ft_printf("%s (for architecture ", name);
+			ft_printf("%s (architecture ", name);
 			if (reversebytes32(stru->fat_arch->cputype) == CPU_TYPE_POWERPC)
-				ft_printf("ppc):\n");
+				ft_printf("ppc):");
 			if (reversebytes32(stru->fat_arch->cputype) == CPU_TYPE_I386)
-				ft_printf("i386):\n");
+				ft_printf("i386):");
 		}
 		stru->sizepart = reversebytes32(stru->fat_arch->size);
 		if ((unsigned int)stru->magic_number == FAT_CIGAM)
@@ -69,7 +69,7 @@ char	*nm3(struct s_stru *stru, void *ptr, char *name)
 int		nm4(struct s_stru *stru, void *ptr, char *name)
 {
 	if ((unsigned int)stru->magic_number != 0x72613c21 && ft_strcmp(name,
-				"/NULL/") != 0)
+				"/NULL/") != 0 && stru->check[1] != 1)
 		ft_printf("%s:", name);
 	else if ((unsigned int)stru->magic_number == 0x72613c21)
 		ft_printf("Archive : %s\n", name);

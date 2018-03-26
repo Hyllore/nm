@@ -6,7 +6,7 @@
 #    By: droly <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/27 15:32:49 by droly             #+#    #+#              #
-#    Updated: 2018/03/22 16:22:04 by droly            ###   ########.fr        #
+#    Updated: 2018/03/26 11:54:44 by droly            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,8 @@ SRC = otool.c \
 	  print_output32.c \
 	  print_output32_reverse.c \
 	  reverse.c \
-	  otool2.c
+	  otool2.c \
+	  addotool.c
 
 OBJ = $(SRC:.c=.o)
 
